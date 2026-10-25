@@ -1,8 +1,8 @@
 // Thin wrapper around the preload API, with browser fallbacks so the UI can also
 // run in a plain browser during development.
-import type { DesktopApi, FileFilter } from '../../../preload'
+import type { DesktopApi, FileFilter, UpdateStatus } from '../../../preload'
 
-export type { FileFilter }
+export type { FileFilter, UpdateStatus }
 
 const api: DesktopApi | undefined = window.api
 
@@ -106,6 +106,21 @@ export async function setSettings(patch: Record<string, unknown>): Promise<Recor
   const next = { ...(await getSettings()), ...patch }
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(next))
   return next
+}
+
+export async function appInfo(): Promise<{ version: string; packaged: boolean; portable: boolean }> {
+  return api ? api.appInfo() : { version: import.meta.env.VITE_APP_VERSION ?? 'dev', packaged: false, portable: false }
+}
+
+const UNSUPPORTED: UpdateStatus = { state: 'unsupported', currentVersion: 'dev', canInstall: false, releaseUrl: 'https://github.com/KingCharlesVI/rack-designer/releases/latest' }
+
+export const updates = {
+  status: (): Promise<UpdateStatus> => api?.updateStatus() ?? Promise.resolve(UNSUPPORTED),
+  check: (): Promise<UpdateStatus> => api?.checkForUpdates() ?? Promise.resolve(UNSUPPORTED),
+  download: (): Promise<UpdateStatus> => api?.downloadUpdate() ?? Promise.resolve(UNSUPPORTED),
+  install: (): Promise<boolean> => api?.installUpdate() ?? Promise.resolve(false),
+  openReleasePage: (): Promise<void> => api?.openReleasePage() ?? openExternal(UNSUPPORTED.releaseUrl),
+  onStatus: (cb: (s: UpdateStatus) => void): (() => void) => api?.onUpdateStatus(cb) ?? (() => {})
 }
 
 export const setDirty = (dirty: boolean) => api?.setDirty(dirty)

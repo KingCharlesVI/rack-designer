@@ -3,10 +3,10 @@ import { Drawing, SvgDefs } from '../drawing/Drawing'
 import { layoutProject } from '../drawing/geometry'
 import { CATEGORY_LABELS } from '../library'
 import { newCustomId, saveCustomComponent } from '../lib/commands'
-import { PORT_TYPES } from '../model/ports'
 import { createProject } from '../model/project'
-import type { Category, ComponentDef, Face, PortGroup, Project } from '../model/types'
+import type { Category, ComponentDef, Face, Project } from '../model/types'
 import { useStore } from '../store'
+import { PortGroupsEditor } from './PortArranger'
 
 const blank = (): ComponentDef => ({
   id: '',
@@ -22,9 +22,6 @@ const blank = (): ComponentDef => ({
   ]
 })
 
-const dataTypes = Object.values(PORT_TYPES).filter((t) => t.kind === 'data')
-const powerTypes = Object.values(PORT_TYPES).filter((t) => t.kind === 'power')
-
 export function CustomComponentDialog() {
   const dialog = useStore((s) => (s.dialog?.kind === 'custom-component' ? s.dialog : null))
   const catalog = useStore((s) => s.catalog)
@@ -33,6 +30,13 @@ export function CustomComponentDialog() {
     const src = dialog?.componentId ? catalog.byId.get(dialog.componentId) ?? useStore.getState().project.components[dialog.componentId] : undefined
     if (!src) return blank()
     const copy = structuredClone(src)
+    const ids = new Set<string>()
+    copy.ports = copy.ports.map((g, i) => {
+      let id = g.id || `g${i + 1}`
+      while (ids.has(id)) id = `${id}x`
+      ids.add(id)
+      return { ...g, id }
+    })
     delete copy.source
     if (dialog?.duplicate) {
       copy.id = ''
@@ -45,7 +49,6 @@ export function CustomComponentDialog() {
   const [error, setError] = useState('')
   const isNew = !c.id
   const update = (patch: Partial<ComponentDef>) => setC((x) => ({ ...x, ...patch }))
-  const setGroup = (i: number, patch: Partial<PortGroup>) => setC((x) => ({ ...x, ports: x.ports.map((g, j) => (j === i ? { ...g, ...patch, names: patch.names ?? (patch.count !== undefined || patch.label !== undefined ? undefined : g.names) } : g)) }))
 
   const save = async () => {
     if (!c.model.trim()) return setError('Model name is required')
@@ -72,7 +75,7 @@ export function CustomComponentDialog() {
 
   return (
     <div className="modal-backdrop" onMouseDown={(e) => e.target === e.currentTarget && close()}>
-      <div className="modal wide" role="dialog">
+      <div className="modal xwide" role="dialog">
         <header>
           <h2>{isNew ? 'New custom component' : `Edit ${initial.model}`}</h2>
           <button onClick={close}>×</button>
@@ -177,81 +180,21 @@ export function CustomComponentDialog() {
           </label>
 
           <h3>Ports</h3>
-          <table className="groups">
-            <thead>
-              <tr>
-                <th>Side</th>
-                <th>Type</th>
-                <th>Count</th>
-                <th>Label prefix</th>
-                <th>Start #</th>
-                <th>Speed</th>
-                <th>Rows</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {c.ports.map((g, i) => (
-                <tr key={i}>
-                  <td>
-                    <select value={g.face} onChange={(e) => setGroup(i, { face: e.target.value as Face })}>
-                      <option value="front">Front</option>
-                      <option value="rear">Rear</option>
-                    </select>
-                  </td>
-                  <td>
-                    <select value={g.type} onChange={(e) => setGroup(i, { type: e.target.value })}>
-                      <optgroup label="Data">
-                        {dataTypes.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                      <optgroup label="Power">
-                        {powerTypes.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.name}
-                          </option>
-                        ))}
-                      </optgroup>
-                    </select>
-                  </td>
-                  <td>
-                    <input type="number" min={1} max={512} value={g.count} onChange={(e) => setGroup(i, { count: Math.max(1, Math.min(512, Number(e.target.value) || 1)) })} />
-                  </td>
-                  <td>
-                    <input value={g.label ?? ''} onChange={(e) => setGroup(i, { label: e.target.value })} />
-                  </td>
-                  <td>
-                    <input type="number" min={0} value={g.start ?? 1} onChange={(e) => setGroup(i, { start: Number(e.target.value) })} />
-                  </td>
-                  <td>
-                    <input value={g.speed ?? ''} placeholder="—" onChange={(e) => setGroup(i, { speed: e.target.value || undefined })} />
-                  </td>
-                  <td>
-                    <input type="number" min={0} max={8} value={g.rows ?? ''} placeholder="auto" onChange={(e) => setGroup(i, { rows: Number(e.target.value) || undefined })} />
-                  </td>
-                  <td>
-                    <button className="x" onClick={() => setC((x) => ({ ...x, ports: x.ports.filter((_, j) => j !== i) }))}>
-                      ×
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <button onClick={() => setC((x) => ({ ...x, ports: [...x.ports, { id: '', type: 'rj45', count: 1, face: 'front', label: 'Port' }] }))}>+ Add port group</button>
+          <PortGroupsEditor comp={c} onChange={(ports) => update({ ports })} />
 
-          <h3>Preview</h3>
-          <div className="preview">
-            {(['front', 'rear'] as Face[]).map((face) => (
-              <svg key={face} width={preview.layout.width + 20} height={preview.layout.height + 10} viewBox={`-10 -5 ${preview.layout.width + 20} ${preview.layout.height + 10}`}>
-                <SvgDefs />
-                <Drawing project={preview.project} layout={preview.layout} face={face} showCables={false} />
-              </svg>
-            ))}
-          </div>
+          {(c.uHeight === 0 || c.category === 'feed') && (
+            <>
+              <h3>Preview</h3>
+              <div className="preview">
+                {(['front', 'rear'] as Face[]).map((face) => (
+                  <svg key={face} width={preview.layout.width + 20} height={preview.layout.height + 10} viewBox={`-10 -5 ${preview.layout.width + 20} ${preview.layout.height + 10}`}>
+                    <SvgDefs />
+                    <Drawing project={preview.project} layout={preview.layout} face={face} showCables={false} />
+                  </svg>
+                ))}
+              </div>
+            </>
+          )}
           {error && <div className="error">{error}</div>}
         </div>
         <footer>

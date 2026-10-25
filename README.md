@@ -8,6 +8,9 @@ A Windows desktop app for designing server racks: lay out equipment in front and
 
 - **Large component library**: 1,200+ components from 70+ manufacturers (Dell, HPE, Lenovo, Cisco, Juniper, Arista, Aruba, Ubiquiti, MikroTik, Fortinet, Palo Alto, NetApp, Pure, Synology, APC, Eaton, Vertiv, Raritan and more), plus generic servers, switches, PDUs, UPSs, patch panels, blanks, shelves and facility power feeds. There are also 90 rack models (enclosed, open-frame, 2-post and wall-mount).
 - **Custom components and racks**: create your own devices with any mix of ports, and your own rack models, or copy a library item and adjust it. They are saved to your personal library.
+- **Port arrangement**: lay out each port group with rows, numbering direction, blocks (e.g. 48 ports as 4 blocks of 6×2), alignment and position. Drag groups into place on a live faceplate preview.
+- **Port colour codes**: ports are colour-coded by type (PoE, copper, management, console, SFP, QSFP, fibre, power…). You can set a custom colour per group. A legend appears on the canvas and in exports.
+- **Automatic updates**: the installed app checks GitHub Releases, downloads updates when you choose, and installs them on restart.
 - **Community packs**: browse, install and update packs of components and racks shared by other users (**File → Community packs…**). You can also build your own pack from your custom items and share it in a few clicks. Packs can be installed from the registry, a file, or a link. See [community/README.md](community/README.md).
 - **Self-hosted registry server**: a lightweight server (port 5010) for a homelab or team. People publish packs to it directly from the app, and an admin console handles approvals. See [server/README.md](server/README.md).
 - **Front and rear elevations**: full-depth vs half-depth devices, rear-mounted equipment, zero-U vertical PDUs on the side rails, and power feeds above each rack.
@@ -18,6 +21,14 @@ A Windows desktop app for designing server racks: lay out equipment in front and
 - **Files**: save/open `.rack` design files. These are self-contained JSON that embed every component definition used, so they open on any machine. You can also merge racks from another design.
 - **Exports**: front and rear elevation drawings (SVG/PNG), bill of materials, cable schedule and power report (CSV).
 - Undo/redo, duplicate, and keyboard shortcuts.
+
+## Download
+
+Get the latest Windows build from [Releases](https://github.com/KingCharlesVI/rack-designer/releases/latest):
+- `rack-designer-setup-<version>.exe` installs the app and keeps it up to date (**Help → Check for updates…**).
+- `rack-designer-portable-<version>.exe` runs without installing, but doesn't update itself.
+
+The builds aren't code-signed yet, so Windows SmartScreen may warn on first run (**More info → Run anyway**).
 
 ## Getting started
 
@@ -54,11 +65,29 @@ Try **Help → Open example design**, or open [examples/compute-pod.rack](exampl
 | Select a cable | Click a cable, or click a port that is already connected |
 | Front/rear view | <kbd>F</kbd> / <kbd>R</kbd> |
 | Show/hide cables | <kbd>C</kbd> |
+| Show/hide port colour legend | <kbd>L</kbd> |
 | Pan / zoom | Drag the background or scroll / <kbd>Ctrl</kbd>+scroll |
 | Delete | <kbd>Del</kbd> |
 | Duplicate | <kbd>Ctrl</kbd>+<kbd>D</kbd> |
 
 Model power by placing a **power feed** (Library → Power feeds) above the rack, connecting it to a PDU's input, then connecting device PSUs to PDU outlets.
+
+## Releasing
+
+Releases are built on this machine and uploaded to GitHub Releases with one command:
+
+1. Update `version` in `package.json` and add a matching `## [x.y.z]` section to [CHANGELOG.md](CHANGELOG.md). It becomes the release notes.
+2. Commit and push to `main`.
+3. Run `npm run release` (add `-- --dry-run` to only check and build).
+
+The command:
+- checks that `main` is clean and pushed, the version isn't already tagged, and the changelog has notes;
+- asks for confirmation, then runs the type check and tests;
+- builds the installer, portable `.exe` and `latest.yml`, tags the commit, and uploads everything to a new GitHub Release using the [GitHub CLI](https://cli.github.com) (`gh auth login` once).
+
+Installed copies pick up the new version from `latest.yml` the next time they check for updates.
+
+To change the icon, edit `build/icon.svg` (and `build/icon-small.svg` for the 16–32 px sizes), then run `npm run icons`.
 
 ## File formats
 

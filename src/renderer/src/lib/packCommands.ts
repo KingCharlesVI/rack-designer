@@ -29,7 +29,8 @@ export async function loadSettings() {
   S().setSettings({
     registryUrl: typeof s.registryUrl === 'string' && s.registryUrl ? s.registryUrl : DEFAULT_REGISTRY_URL,
     author: typeof s.author === 'string' ? s.author : undefined,
-    packKeys: s.packKeys && typeof s.packKeys === 'object' ? (s.packKeys as Record<string, string>) : undefined
+    packKeys: s.packKeys && typeof s.packKeys === 'object' ? (s.packKeys as Record<string, string>) : undefined,
+    autoCheckUpdates: s.autoCheckUpdates !== false
   })
 }
 

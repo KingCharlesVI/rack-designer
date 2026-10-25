@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Simplified artwork for 16–32 px: fewer, bolder shapes. -->
+  <rect x="0.5" y="0.5" width="31" height="31" rx="7" fill="#2563eb"/>
+  <rect x="7" y="4" width="18" height="24" rx="2.5" fill="#0b1220" stroke="#e2e8f0" stroke-width="1.6"/>
+  <rect x="10" y="7.5" width="12" height="4" rx="1" fill="#64748b"/>
+  <rect x="10" y="14" width="12" height="4" rx="1" fill="#64748b"/>
+  <rect x="10" y="20.5" width="12" height="4" rx="1" fill="#64748b"/>
+  <rect x="18.5" y="8.5" width="2.2" height="2" rx="0.6" fill="#22c55e"/>
+  <rect x="18.5" y="15" width="2.2" height="2" rx="0.6" fill="#f59e0b"/>
+  <rect x="18.5" y="21.5" width="2.2" height="2" rx="0.6" fill="#22c55e"/>
+</svg>

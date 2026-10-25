@@ -4,6 +4,7 @@ import { buildCatalog, builtinRacks, type Catalog } from './library'
 import { createProject, rackFromDef } from './model/project'
 import { parseLibrary, type LibraryPack } from './model/serialize'
 import type { Face, PortRef, Project, Selection } from './model/types'
+import type { UpdateStatus } from './lib/desktop'
 
 const HISTORY_LIMIT = 200
 
@@ -27,6 +28,7 @@ export type DialogState =
     }
   | { kind: 'custom-rack'; rackId?: string; duplicate?: boolean }
   | { kind: 'community'; tab?: 'browse' | 'installed' | 'create' }
+  | { kind: 'about' }
 
 /** Default community registry: the community/ folder of the Rack Designer GitHub repo. */
 export const DEFAULT_REGISTRY_URL = 'https://raw.githubusercontent.com/KingCharlesVI/rack-designer/main/community/index.json'
@@ -35,6 +37,8 @@ export interface Settings {
   registryUrl: string
   /** Remembered author name for the pack builder. */
   author?: string
+  /** Check GitHub for new versions at startup (default on). */
+  autoCheckUpdates?: boolean
   /** Edit keys for packs this user published to self-hosted registries, keyed by "<registry origin> <pack id>". */
   packKeys?: Record<string, string>
 }
@@ -51,6 +55,7 @@ interface State {
   pending: PortRef | null
   face: Face
   showCables: boolean
+  showLegend: boolean
   zoom: number
   pan: { x: number; y: number }
   catalog: Catalog
@@ -58,6 +63,9 @@ interface State {
   toasts: Toast[]
   dialog: DialogState | null
   settings: Settings
+  update: UpdateStatus | null
+  /** Version the user chose to skip in the update banner. */
+  dismissedUpdate: string | null
 
   /** Apply an edit. The recipe may return an error string, in which case nothing changes. */
   edit: (recipe: (draft: Project) => string | null | void, opts?: { select?: Selection | null }) => string | null
@@ -69,12 +77,15 @@ interface State {
   setPending: (p: PortRef | null) => void
   setFace: (f: Face) => void
   toggleCables: () => void
+  toggleLegend: () => void
   setView: (zoom: number, pan: { x: number; y: number }) => void
   setUserPacks: (files: { name: string; content: string }[]) => void
   toast: (text: string, kind?: Toast['kind']) => void
   dismissToast: (id: number) => void
   openDialog: (d: DialogState | null) => void
   setSettings: (s: Partial<Settings>) => void
+  setUpdate: (u: UpdateStatus | null) => void
+  dismissUpdate: (version: string) => void
 }
 
 export function starterProject(): Project {
@@ -96,6 +107,7 @@ export const useStore = create<State>((set, get) => ({
   pending: null,
   face: 'front',
   showCables: true,
+  showLegend: true,
   zoom: 1,
   pan: { x: 40, y: 20 },
   catalog: buildCatalog(),
@@ -103,6 +115,8 @@ export const useStore = create<State>((set, get) => ({
   toasts: [],
   dialog: null,
   settings: { registryUrl: DEFAULT_REGISTRY_URL },
+  update: null,
+  dismissedUpdate: null,
 
   edit: (recipe, opts) => {
     const { project, past, version } = get()
@@ -139,6 +153,7 @@ export const useStore = create<State>((set, get) => ({
   setPending: (pending) => set({ pending }),
   setFace: (face) => set({ face }),
   toggleCables: () => set({ showCables: !get().showCables }),
+  toggleLegend: () => set({ showLegend: !get().showLegend }),
   setView: (zoom, pan) => set({ zoom, pan }),
   setUserPacks: (files) => {
     const packs: UserPack[] = []
@@ -158,7 +173,9 @@ export const useStore = create<State>((set, get) => ({
   },
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
   openDialog: (dialog) => set({ dialog }),
-  setSettings: (patch) => set({ settings: { ...get().settings, ...patch } })
+  setSettings: (patch) => set({ settings: { ...get().settings, ...patch } }),
+  setUpdate: (update) => set({ update }),
+  dismissUpdate: (version) => set({ dismissedUpdate: version })
 }))
 
 function validSelection(p: Project, s: Selection | null): Selection | null {

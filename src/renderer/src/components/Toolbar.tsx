@@ -1,3 +1,4 @@
+import iconUrl from '../../../../build/icon.svg'
 import { canvasControls } from './Canvas'
 import { exportPng, exportSvg, newDesign, openDesign, saveDesign } from '../lib/commands'
 import { isDirty, useStore } from '../store'
@@ -16,7 +17,7 @@ export function Toolbar() {
   return (
     <header className="toolbar">
       <div className="brand">
-        <span className="logo">▦</span> Rack Designer
+        <img className="logo" src={iconUrl} alt="" /> Rack Designer
       </div>
       <div className="group">
         <button onClick={newDesign} title="New design (Ctrl+N)">

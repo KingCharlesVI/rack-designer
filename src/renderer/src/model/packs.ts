@@ -199,6 +199,11 @@ function sanitizeComponent(raw: unknown, strict: boolean): { comp: ComponentDef 
         start: int(g.start, 0, 100000),
         names: names?.length ? names : undefined,
         rows: int(g.rows, 1, 16),
+        order: g.order === 'columns' || g.order === 'rows' ? g.order : undefined,
+        blockEvery: int(g.blockEvery, 1, 256),
+        x: num(g.x, 0, 100),
+        align: g.align === 'top' || g.align === 'middle' || g.align === 'bottom' ? g.align : undefined,
+        color: typeof g.color === 'string' && COLOR_RE.test(g.color) ? g.color : undefined,
         speed: str(g.speed, 20)
       })
     )

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react'
-import { Drawing, SvgDefs, type Interaction, type Preview } from '../drawing/Drawing'
+import { Drawing, legendEntries, SvgDefs, tint, type Interaction, type Preview } from '../drawing/Drawing'
 import { hitMount, layoutProject, mountRect, sideUsage, type ProjectLayout } from '../drawing/geometry'
 import { addDevice, canPlace, connect, connectionAt, describePort, getComponent, moveDevice } from '../model/project'
 import type { ComponentDef, Connection, Device, Mount, PortRef } from '../model/types'
@@ -255,6 +255,38 @@ export function Canvas() {
         <button onClick={fit} title="Fit (Ctrl 0)">Fit</button>
       </div>
       <Legend layout={layout} />
+      <PortLegend />
+    </div>
+  )
+}
+
+function PortLegend() {
+  const project = useStore((s) => s.project)
+  const show = useStore((s) => s.showLegend)
+  const toggle = useStore((s) => s.toggleLegend)
+  const entries = useMemo(() => legendEntries(project), [project])
+  if (!entries.length) return null
+  if (!show) {
+    return (
+      <button className="port-legend-toggle" onClick={toggle} onMouseDown={(e) => e.stopPropagation()} title="Show port colours (L)">
+        Port colours
+      </button>
+    )
+  }
+  return (
+    <div className="port-legend" onMouseDown={(e) => e.stopPropagation()}>
+      <div className="port-legend-head">
+        Port colours
+        <button className="x" onClick={toggle} title="Hide (L)">
+          ×
+        </button>
+      </div>
+      {entries.map((e) => (
+        <div key={e.label + e.color} className="port-legend-row">
+          <i style={{ background: tint(e.color), borderColor: e.color }} />
+          {e.label}
+        </div>
+      ))}
     </div>
   )
 }

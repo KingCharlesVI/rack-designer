@@ -1,5 +1,5 @@
 import { renderToStaticMarkup } from 'react-dom/server'
-import { Drawing, FONT, SvgDefs } from '../drawing/Drawing'
+import { Drawing, FONT, legendEntries, legendHeight, SvgDefs, SvgLegend } from '../drawing/Drawing'
 import { layoutProject } from '../drawing/geometry'
 import type { Face, Project } from '../model/types'
 
@@ -10,8 +10,10 @@ export function elevationSvg(project: Project, opts: { faces?: Face[]; showCable
   const pad = 30
   const titleH = 50
   const sectionH = layout.height + 40
-  const width = layout.width + pad * 2
-  const height = titleH + sectionH * faces.length + pad
+  const width = Math.max(layout.width + pad * 2, 420)
+  const legend = legendEntries(project)
+  const legendH = legendHeight(legend.length, width - pad * 2)
+  const height = titleH + sectionH * faces.length + (legendH ? legendH + 10 : 0) + pad
   const date = new Date().toLocaleDateString()
   const body = renderToStaticMarkup(
     <svg xmlns="http://www.w3.org/2000/svg" width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
@@ -33,6 +35,7 @@ export function elevationSvg(project: Project, opts: { faces?: Face[]; showCable
           </g>
         </g>
       ))}
+      {legendH > 0 && <SvgLegend entries={legend} x={pad} y={titleH + sectionH * faces.length + 10} width={width - pad * 2} />}
     </svg>
   )
   return { svg: `<?xml version="1.0" encoding="UTF-8"?>\n${body}`, width, height }

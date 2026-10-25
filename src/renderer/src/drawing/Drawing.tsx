@@ -1,7 +1,7 @@
 // Pure SVG rendering of a project's racks for one view (front or rear). Used both
 // interactively and for SVG/PNG export, so it only uses inline presentation attributes.
 import { memo, type MouseEvent as ReactMouseEvent } from 'react'
-import { portType } from '../model/ports'
+import { PORT_COLOR_CLASSES, portColor, portColorClass, portType, getPorts } from '../model/ports'
 import { getComponent, portKey } from '../model/project'
 import type { ComponentDef, Connection, Device, Face, Mount, PortRef, Project, Selection } from '../model/types'
 import { appearance, deviceRect, layoutPorts, portPoint, U_PX, type ProjectLayout, type RackLayout, type Rect } from './geometry'
@@ -191,8 +191,10 @@ function DeviceView({ project, layout, device, face, connected, selectedConn, in
         const t = portType(b.port.type)
         const isPending = pendingKey === key
         const highlighted = isPending || selectedPortKey === key || (conn && conn.id === selectedConn)
-        const fill = conn ? conn.color ?? '#3b82f6' : t.kind === 'power' ? '#050505' : '#0b0d10'
-        const stroke = highlighted ? '#fde047' : t.kind === 'power' ? (t.role === 'outlet' ? '#a3a3a3' : '#737373') : '#59606b'
+        // Colour code: tinted fill + bright outline by port class; connected ports fill with the cable colour.
+        const code = portColor(b.port)
+        const fill = conn ? conn.color ?? '#3b82f6' : tint(code)
+        const stroke = highlighted ? '#fde047' : code
         return (
           <rect
             key={b.port.id}
@@ -203,7 +205,7 @@ function DeviceView({ project, layout, device, face, connected, selectedConn, in
             rx={t.kind === 'power' ? 1.2 : 0.6}
             fill={fill}
             stroke={stroke}
-            strokeWidth={highlighted ? 1.4 : 0.6}
+            strokeWidth={highlighted ? 1.4 : 0.7}
             onMouseDown={interaction?.onPortDown ? (e) => interaction.onPortDown!(e, ref) : undefined}
             style={interaction?.onPortDown ? { cursor: 'crosshair' } : undefined}
           >
@@ -327,4 +329,73 @@ export function describeMount(m: Mount): string {
   if (m.kind === 'rack') return `U${m.u} ${m.face}`
   if (m.kind === 'zeroU') return `${m.side} side`
   return `feed slot ${m.slot + 1}`
+}
+
+/** Dark fill tinted towards a port's colour code, so unconnected ports still show their class. */
+const tintCache = new Map<string, string>()
+export function tint(hex: string): string {
+  let out = tintCache.get(hex)
+  if (!out) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hex)
+    const n = m ? parseInt(m[1], 16) : 0x59606b
+    const mix = (c: number, base: number) => Math.round(base + (c - base) * 0.32)
+    const r = mix((n >> 16) & 255, 11)
+    const g = mix((n >> 8) & 255, 13)
+    const b = mix(n & 255, 16)
+    out = `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`
+    tintCache.set(hex, out)
+  }
+  return out
+}
+
+export interface LegendEntry {
+  color: string
+  label: string
+}
+
+/** Colour codes actually used by the ports in a design (class colours plus custom group colours). */
+export function legendEntries(project: Project): LegendEntry[] {
+  const classes = new Set<string>()
+  const custom = new Map<string, string>()
+  const seen = new Set<string>()
+  for (const d of project.devices) {
+    const comp = getComponent(project, d)
+    if (seen.has(comp.id)) continue
+    seen.add(comp.id)
+    for (const p of getPorts(comp)) {
+      if (p.color) {
+        const g = comp.ports.find((x) => x.id === p.groupId)
+        if (!custom.has(p.color.toLowerCase())) custom.set(p.color.toLowerCase(), `${(g?.label || portType(p.type).name).replace(/[\s/:.-]+$/, '')} (custom)`)
+      } else classes.add(portColorClass(p.type).id)
+    }
+  }
+  const out: LegendEntry[] = PORT_COLOR_CLASSES.filter((c) => classes.has(c.id)).map((c) => ({ color: c.color, label: c.label }))
+  for (const [color, label] of custom) out.push({ color, label })
+  return out
+}
+
+/** Port colour legend for exported drawings. Returns its height so the caller can reserve space. */
+export function SvgLegend({ entries, x, y, width }: { entries: LegendEntry[]; x: number; y: number; width: number }) {
+  const colW = 190
+  const perRow = Math.max(1, Math.floor(width / colW))
+  return (
+    <g transform={`translate(${x} ${y})`} fontFamily={FONT}>
+      <text x={0} y={0} fontSize={11} fontWeight={700} fill="#9ca3af" letterSpacing={1.5}>
+        PORT COLOURS
+      </text>
+      {entries.map((e, i) => (
+        <g key={e.label + e.color} transform={`translate(${(i % perRow) * colW} ${14 + Math.floor(i / perRow) * 18})`}>
+          <rect width={14} height={10} rx={1.5} fill={tint(e.color)} stroke={e.color} strokeWidth={1.2} />
+          <text x={20} y={9} fontSize={11} fill="#d1d5db">
+            {e.label}
+          </text>
+        </g>
+      ))}
+    </g>
+  )
+}
+
+export function legendHeight(count: number, width: number): number {
+  if (!count) return 0
+  return 20 + Math.ceil(count / Math.max(1, Math.floor(width / 190))) * 18
 }

@@ -122,6 +122,8 @@ export interface PortDef {
   face: Face
   label: string
   speed?: string
+  /** Per-group colour override. */
+  color?: string
 }
 
 const portCache = new WeakMap<ComponentDef, PortDef[]>()
@@ -131,7 +133,7 @@ export function expandGroup(g: PortGroup): PortDef[] {
   const start = g.start ?? 1
   for (let i = 0; i < g.count; i++) {
     const label = g.names?.[i] ?? `${g.label ?? ''}${start + i}`
-    out.push({ id: `${g.id}-${i + 1}`, groupId: g.id, type: g.type, face: g.face, label, speed: g.speed })
+    out.push({ id: `${g.id}-${i + 1}`, groupId: g.id, type: g.type, face: g.face, label, speed: g.speed, color: g.color })
   }
   return out
 }
@@ -226,6 +228,52 @@ export function suggestCable(typeA: string, typeB: string, lengthM?: number): st
   if (fams.has('video')) return 'Video cable'
   if (fams.has('serial')) return 'Serial cable'
   return 'Patch cable'
+}
+
+/** Colour-coding of ports on the drawing, by class of port. */
+export interface PortColorClass {
+  id: string
+  label: string
+  color: string
+}
+
+export const PORT_COLOR_CLASSES: PortColorClass[] = [
+  { id: 'copper', label: 'Copper (RJ45)', color: '#9ca3af' },
+  { id: 'poe', label: 'PoE (RJ45)', color: '#f59e0b' },
+  { id: 'mgmt', label: 'Management', color: '#3b82f6' },
+  { id: 'console', label: 'Console / serial', color: '#2dd4bf' },
+  { id: 'sfp', label: 'SFP / SFP+ / SFP28', color: '#a78bfa' },
+  { id: 'qsfp', label: 'QSFP / OSFP', color: '#f472b6' },
+  { id: 'fc', label: 'Fibre Channel', color: '#4ade80' },
+  { id: 'fiber', label: 'Fibre (LC / SC / MPO)', color: '#22d3ee' },
+  { id: 'stack', label: 'Stacking', color: '#e2e8f0' },
+  { id: 'peripheral', label: 'USB / video / SAS / coax', color: '#64748b' },
+  { id: 'power-out', label: 'Power outlet', color: '#ef4444' },
+  { id: 'power-in', label: 'Power inlet / plug', color: '#fca5a5' }
+]
+
+const COLOR_BY_CLASS = new Map(PORT_COLOR_CLASSES.map((c) => [c.id, c]))
+
+export function portColorClass(typeId: string): PortColorClass {
+  const t = portType(typeId)
+  let id: string
+  if (t.kind === 'power') id = t.role === 'outlet' ? 'power-out' : 'power-in'
+  else if (typeId === 'rj45-poe') id = 'poe'
+  else if (typeId === 'rj45-mgmt') id = 'mgmt'
+  else if (typeId === 'sfp-fc') id = 'fc'
+  else {
+    const byFamily: Record<string, string> = {
+      rj45: 'copper', console: 'console', serial: 'console', sfp: 'sfp', qsfp: 'qsfp', osfp: 'qsfp',
+      'fiber-lc': 'fiber', 'fiber-sc': 'fiber', 'fiber-mpo': 'fiber', stack: 'stack'
+    }
+    id = byFamily[t.family ?? ''] ?? 'peripheral'
+  }
+  return COLOR_BY_CLASS.get(id)!
+}
+
+/** Colour of a port on the drawing: the group's override, else its class colour. */
+export function portColor(port: Pick<PortDef, 'type' | 'color'>): string {
+  return port.color ?? portColorClass(port.type).color
 }
 
 export const CABLE_COLORS = [

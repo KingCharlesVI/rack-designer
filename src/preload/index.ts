@@ -1,4 +1,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
+import type { UpdateStatus } from '../main/updater'
+
+export type { UpdateStatus }
 
 export interface FileFilter {
   name: string
@@ -25,6 +28,17 @@ const api = {
     const fn = (_e: IpcRendererEvent, cmd: string) => cb(cmd)
     ipcRenderer.on('menu', fn)
     return () => ipcRenderer.removeListener('menu', fn)
+  },
+  appInfo: (): Promise<{ version: string; packaged: boolean; portable: boolean }> => ipcRenderer.invoke('app:info'),
+  updateStatus: (): Promise<UpdateStatus> => ipcRenderer.invoke('update:getStatus'),
+  checkForUpdates: (): Promise<UpdateStatus> => ipcRenderer.invoke('update:check'),
+  downloadUpdate: (): Promise<UpdateStatus> => ipcRenderer.invoke('update:download'),
+  installUpdate: (): Promise<boolean> => ipcRenderer.invoke('update:install'),
+  openReleasePage: (): Promise<void> => ipcRenderer.invoke('update:openReleasePage'),
+  onUpdateStatus: (cb: (status: UpdateStatus) => void) => {
+    const fn = (_e: IpcRendererEvent, status: UpdateStatus) => cb(status)
+    ipcRenderer.on('update:status', fn)
+    return () => ipcRenderer.removeListener('update:status', fn)
   },
   onFileOpened: (cb: (file: { path: string; content: string }) => void) => {
     const fn = (_e: IpcRendererEvent, file: { path: string; content: string }) => cb(file)

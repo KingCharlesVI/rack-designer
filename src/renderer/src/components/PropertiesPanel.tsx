@@ -2,7 +2,8 @@ import { CATEGORY_SINGULAR } from '../library'
 import { useAnalysis } from '../lib/analysis'
 import { duplicateSelection } from '../lib/commands'
 import { deviceDraw, feedSpec, formatW } from '../model/power'
-import { CABLE_COLORS, getPorts, portType, suggestCable, type PortDef } from '../model/ports'
+import { CABLE_COLORS, getPorts, portColor, portColorClass, portType, suggestCable, type PortDef } from '../model/ports'
+import { tint } from '../drawing/Drawing'
 import {
   connectionAt,
   describePort,
@@ -406,7 +407,7 @@ function PortTable({ project, device, ports, focusPort }: { project: Project; de
               return (
                 <div key={port.id} className={`port-row${focusPort === port.id ? ' focus' : ''}${isPending ? ' pending' : ''}`}>
                   <button className="port-label" title="Click to start or select a connection" onClick={() => portClick(ref)}>
-                    <i style={{ background: conn?.color ?? 'transparent' }} />
+                    <i style={{ background: conn?.color ?? tint(portColor(port)), borderColor: portColor(port) }} title={portColorClass(port.type).label} />
                     {port.label}
                   </button>
                   <span className="port-type">

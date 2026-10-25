@@ -4,12 +4,13 @@ import { Canvas, canvasControls } from './components/Canvas'
 import { CommunityDialog } from './components/CommunityDialog'
 import { CustomComponentDialog } from './components/CustomComponentDialog'
 import { CustomRackDialog } from './components/CustomRackDialog'
+import { AboutDialog, UpdateBanner } from './components/Updates'
 import { LibraryPanel } from './components/LibraryPanel'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { Toolbar } from './components/Toolbar'
 import * as cmd from './lib/commands'
 import { loadSettings } from './lib/packCommands'
-import { onFileOpened, onMenu, setDirty, setTitle } from './lib/desktop'
+import { onFileOpened, onMenu, setDirty, setTitle, updates } from './lib/desktop'
 import { disconnect, findDevice, moveDevice, removeDevices } from './model/project'
 import { isDirty, useStore } from './store'
 
@@ -36,9 +37,15 @@ const MENU: Record<string, () => void> = {
   customComponent: () => S().openDialog({ kind: 'custom-component' }),
   customRack: () => S().openDialog({ kind: 'custom-rack' }),
   community: () => S().openDialog({ kind: 'community' }),
+  about: () => S().openDialog({ kind: 'about' }),
+  checkUpdates: () => {
+    S().openDialog({ kind: 'about' })
+    void updates.check()
+  },
   viewFront: () => S().setFace('front'),
   viewRear: () => S().setFace('rear'),
   toggleCables: () => S().toggleCables(),
+  toggleLegend: () => S().toggleLegend(),
   zoomIn: () => canvasControls.zoomBy(1.2),
   zoomOut: () => canvasControls.zoomBy(1 / 1.2),
   zoomFit: () => canvasControls.fit()
@@ -81,6 +88,8 @@ export function App() {
   useEffect(() => {
     void cmd.reloadLibrary()
     void loadSettings()
+    void updates.status().then((u) => S().setUpdate(u))
+    const offUpdate = updates.onStatus((u) => S().setUpdate(u))
     const offMenu = onMenu((c) => MENU[c]?.())
     const offOpen = onFileOpened((f) => {
       if (!isDirty(S()) || window.confirm('Discard unsaved changes to the current design?')) cmd.loadProjectText(f.path, f.content)
@@ -88,6 +97,7 @@ export function App() {
     return () => {
       offMenu()
       offOpen()
+      offUpdate()
     }
   }, [])
 
@@ -136,6 +146,10 @@ export function App() {
         case 'C':
           S().toggleCables()
           break
+        case 'l':
+        case 'L':
+          S().toggleLegend()
+          break
         case 'ArrowUp':
           e.preventDefault()
           nudge(1)
@@ -155,6 +169,7 @@ export function App() {
   return (
     <div className="app">
       <Toolbar />
+      <UpdateBanner />
       <div className="main">
         <LibraryPanel />
         <div className="center">
@@ -166,6 +181,7 @@ export function App() {
       {dialog?.kind === 'custom-component' && <CustomComponentDialog key={`${dialog.componentId}-${dialog.duplicate}`} />}
       {dialog?.kind === 'custom-rack' && <CustomRackDialog key={`${dialog.rackId}-${dialog.duplicate}`} />}
       {dialog?.kind === 'community' && <CommunityDialog />}
+      {dialog?.kind === 'about' && <AboutDialog />}
       <Toasts />
     </div>
   )

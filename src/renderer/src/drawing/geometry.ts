@@ -1,6 +1,6 @@
 import { portType, type PortDef, getPorts } from '../model/ports'
 import { getComponent, U_MM } from '../model/project'
-import type { ComponentDef, Device, Face, Mount, PortRef, Project, Rack } from '../model/types'
+import type { ComponentDef, Device, Face, Mount, PortGroup, PortRef, Project, Rack } from '../model/types'
 
 export const U_PX = 22
 export const PX_PER_MM = U_PX / U_MM
@@ -122,12 +122,19 @@ export function layoutPorts(comp: ComponentDef, face: Face, w: number, h: number
 }
 
 interface GroupPlan {
+  group: PortGroup | undefined
   ports: PortDef[]
   rows: number
   cols: number
   pw: number
   ph: number
+  /** Numbering runs down columns first (switch style) rather than along rows. */
+  columnMajor: boolean
+  blockEvery: number
 }
+
+/** Ports that run down columns by default: switches number 1/2 top/bottom. */
+const COLUMN_MAJOR: ComponentDef['category'][] = ['switch', 'router', 'firewall']
 
 function plan(comp: ComponentDef, face: Face, crossSize: number): GroupPlan[] {
   const ports = getPorts(comp).filter((p) => p.face === face)
@@ -139,13 +146,66 @@ function plan(comp: ComponentDef, face: Face, crossSize: number): GroupPlan[] {
   }
   const defs = new Map(comp.ports.map((g) => [g.id, g]))
   return [...groups.entries()].map(([gid, list]) => {
+    const group = defs.get(gid)
     const t = portType(list[0].type)
     const pw = t.size[0] * PX_PER_MM
     const ph = Math.min(t.size[1] * PX_PER_MM, crossSize - 4)
     const maxRows = Math.max(1, Math.floor((crossSize - 4) / (ph * 1.25)))
     const auto = list.length <= 12 ? 1 : Math.min(maxRows, Math.ceil(list.length / 24))
-    const rows = Math.max(1, Math.min(defs.get(gid)?.rows ?? auto, maxRows, list.length))
-    return { ports: list, rows, cols: Math.ceil(list.length / rows), pw, ph }
+    // Explicit rows are honoured even if they need smaller ports; auto rows must fit at full size.
+    const rows = Math.max(1, Math.min(group?.rows ?? auto, group?.rows ? 16 : maxRows, list.length))
+    const cols = Math.ceil(list.length / rows)
+    return {
+      group,
+      ports: list,
+      rows,
+      cols,
+      pw,
+      ph,
+      columnMajor: group?.order ? group.order === 'columns' : COLUMN_MAJOR.includes(comp.category),
+      blockEvery: group?.blockEvery && group.blockEvery < cols ? group.blockEvery : cols
+    }
+  })
+}
+
+const PORT_PITCH = 1.18
+const GROUP_GAP = 7
+
+/** Width of a group at a given scale, including the gaps between blocks. */
+function groupWidth(g: GroupPlan, scale: number): number {
+  const step = g.pw * PORT_PITCH * scale
+  const blocks = Math.ceil(g.cols / g.blockEvery)
+  return (g.cols - 1) * step + g.pw * scale + (blocks - 1) * g.pw * 0.9 * scale
+}
+
+/**
+ * Left edges of every group. Manually placed groups sit at their position (kept on the
+ * faceplate); automatic groups flow left to right around them, skipping over them as needed.
+ */
+function placeGroups(plans: GroupPlan[], scale: number, w: number, right: number, flowStart: number): number[] {
+  const gap = GROUP_GAP * scale
+  const fixed = plans.map((g) => {
+    if (g.group?.x === undefined) return null
+    const width = groupWidth(g, scale)
+    const left = Math.max(0, Math.min((g.group.x / 100) * w, right - width))
+    return { left, right: left + width }
+  })
+  let cursor = flowStart
+  return plans.map((g, i) => {
+    if (fixed[i]) return fixed[i]!.left
+    const width = groupWidth(g, scale)
+    let left = cursor
+    for (let moved = true; moved; ) {
+      moved = false
+      for (const f of fixed) {
+        if (f && left < f.right + gap && left + width + gap > f.left) {
+          left = f.right + gap
+          moved = true
+        }
+      }
+    }
+    cursor = left + width + gap
+    return left
   })
 }
 
@@ -153,25 +213,67 @@ function layoutHorizontal(comp: ComponentDef, face: Face, w: number, h: number):
   const plans = plan(comp, face, h)
   if (!plans.length) return []
   const labelW = Math.min(64, w * 0.24)
-  const avail = w - labelW - 8
-  const gap = 7
-  const natural = plans.reduce((s, g) => s + g.cols * g.pw * 1.18, 0) + gap * (plans.length - 1)
-  const scale = Math.min(1, avail / natural)
+  const right = w - 6
+  const fits = (scale: number) => {
+    const lefts = placeGroups(plans, scale, w, right, labelW + 2)
+    return plans.every((g, i) => lefts[i] + groupWidth(g, scale) <= right)
+  }
+  // Largest scale (up to 1) at which every group fits on the faceplate.
+  let scale = 1
+  if (!fits(1)) {
+    let lo = 0.15
+    let hi = 1
+    for (let i = 0; i < 18; i++) {
+      const mid = (lo + hi) / 2
+      if (fits(mid)) lo = mid
+      else hi = mid
+    }
+    scale = lo
+  }
+  // With no manual positions, centre the ports in the space right of the label.
+  const allAuto = plans.every((g) => g.group?.x === undefined)
+  let flowStart = labelW + 2
+  if (allAuto) {
+    const natural = plans.reduce((sum, g) => sum + groupWidth(g, scale), 0) + GROUP_GAP * scale * (plans.length - 1)
+    flowStart += Math.max(0, (right - flowStart - natural) / 2)
+  }
+  const lefts = placeGroups(plans, scale, w, right, flowStart)
+
   const out: PortBox[] = []
-  let x = labelW + Math.max(0, (avail - natural * scale) / 2) + 2
-  const columnMajor = comp.category === 'switch' || comp.category === 'router' || comp.category === 'firewall'
-  for (const g of plans) {
+  plans.forEach((g, gi) => {
     const pw = g.pw * scale
-    const step = g.pw * 1.18 * scale
-    const ph = Math.min(g.ph, Math.max(3, g.ph * Math.max(scale, 0.6)))
+    const step = g.pw * PORT_PITCH * scale
+    const blockGap = g.pw * 0.9 * scale
+    const fitH = (h - 4) / (g.rows * 1.25)
+    const ph = Math.max(2.5, Math.min(g.ph, Math.max(3, g.ph * Math.max(scale, 0.6)), fitH))
     const rowStep = Math.min(ph * 1.3, (h - 4) / g.rows)
-    const y0 = (h - (rowStep * (g.rows - 1) + ph)) / 2
+    const blockH = rowStep * (g.rows - 1) + ph
+    const align = g.group?.align ?? 'middle'
+    const y0 = align === 'top' ? 2 : align === 'bottom' ? h - 2 - blockH : (h - blockH) / 2
     g.ports.forEach((port, i) => {
-      const col = columnMajor ? Math.floor(i / g.rows) : i % g.cols
-      const row = columnMajor ? i % g.rows : Math.floor(i / g.cols)
-      out.push({ port, x: x + col * step, y: y0 + row * rowStep, w: pw, h: ph })
+      const col = g.columnMajor ? Math.floor(i / g.rows) : i % g.cols
+      const row = g.columnMajor ? i % g.rows : Math.floor(i / g.cols)
+      const x = lefts[gi] + col * step + Math.floor(col / g.blockEvery) * blockGap
+      out.push({ port, x, y: y0 + row * rowStep, w: pw, h: ph })
     })
-    x += g.cols * step + gap * scale
+  })
+  return out
+}
+
+/** Bounding box of each port group in a laid-out panel (used by the port arranger). */
+export function groupBounds(boxes: PortBox[]): Map<string, Rect> {
+  const out = new Map<string, Rect>()
+  for (const b of boxes) {
+    const r = out.get(b.port.groupId)
+    if (!r) out.set(b.port.groupId, { x: b.x, y: b.y, w: b.w, h: b.h })
+    else {
+      const x2 = Math.max(r.x + r.w, b.x + b.w)
+      const y2 = Math.max(r.y + r.h, b.y + b.h)
+      r.x = Math.min(r.x, b.x)
+      r.y = Math.min(r.y, b.y)
+      r.w = x2 - r.x
+      r.h = y2 - r.y
+    }
   }
   return out
 }
@@ -196,9 +298,10 @@ function layoutVertical(comp: ComponentDef, face: Face, w: number, h: number): P
     const step = g.ph * 1.5 * scale * spread
     const colStep = (w - 2) / g.rows
     g.ports.forEach((port, i) => {
-      const row = Math.floor(i / g.rows)
-      const col = i % g.rows
-      out.push({ port, x: 1 + col * colStep + (colStep - pw) / 2, y: y + row * step, w: pw, h: ph })
+      // Along the strip ("row") and across it ("col"); "rows" numbering runs across first.
+      const across = g.group?.order === 'columns' ? Math.floor(i / g.cols) : i % g.rows
+      const along = g.group?.order === 'columns' ? i % g.cols : Math.floor(i / g.rows)
+      out.push({ port, x: 1 + across * colStep + (colStep - pw) / 2, y: y + along * step, w: pw, h: ph })
     })
     y += g.cols * step + gap * scale * spread
   }

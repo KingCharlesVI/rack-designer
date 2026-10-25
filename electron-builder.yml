@@ -7,14 +7,26 @@ files:
   - out/**
   - package.json
 win:
+  icon: build/icon.ico
   target:
     - nsis
     - portable
 nsis:
   oneClick: false
   allowToChangeInstallationDirectory: true
+  # Stable, space-free names: the updater finds the installer by the name in latest.yml.
+  artifactName: rack-designer-setup-${version}.${ext}
+portable:
+  artifactName: rack-designer-portable-${version}.${ext}
 fileAssociations:
   - ext: rack
     name: Rack Designer Project
     description: Rack Designer project file
     role: Editor
+    icon: icon
+# Releases (and the built-in updater) use GitHub Releases on the public repository.
+publish:
+  - provider: github
+    owner: KingCharlesVI
+    repo: rack-designer
+    releaseType: release

@@ -37,6 +37,16 @@ export interface PortGroup {
   names?: string[]
   /** Number of rows to lay ports out in (auto when omitted). */
   rows?: number
+  /** Numbering direction: "columns" = top-to-bottom then across (typical switches), "rows" = left-to-right then down. */
+  order?: 'columns' | 'rows'
+  /** Split the group into blocks of this many columns, with a gap between blocks. */
+  blockEvery?: number
+  /** Left edge as a percentage of the faceplate width (auto-flow when omitted). */
+  x?: number
+  /** Vertical alignment on the faceplate (default middle). */
+  align?: 'top' | 'middle' | 'bottom'
+  /** Colour code for these ports (#rrggbb), overriding the port type's default. */
+  color?: string
   /** Free-form speed note, e.g. "10G". */
   speed?: string
 }

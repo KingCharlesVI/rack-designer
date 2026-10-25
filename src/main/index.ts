@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, Menu, net, shell, type FileFilter,
 import { promises as fs } from 'node:fs'
 import { basename, extname, join, resolve } from 'node:path'
 import { isAllowedRegistryUrl } from '../renderer/src/model/packs'
+import { initUpdater, RELEASES_URL } from './updater'
 
 let win: BrowserWindow | null = null
 let dirty = false
@@ -143,6 +144,7 @@ function buildMenu() {
         { label: 'Front', accelerator: 'F', registerAccelerator: false, click: command('viewFront') },
         { label: 'Rear', accelerator: 'R', registerAccelerator: false, click: command('viewRear') },
         { label: 'Toggle cables', accelerator: 'C', registerAccelerator: false, click: command('toggleCables') },
+        { label: 'Toggle port colour legend', accelerator: 'L', registerAccelerator: false, click: command('toggleLegend') },
         { type: 'separator' },
         { label: 'Zoom in', accelerator: 'CmdOrCtrl+=', click: command('zoomIn') },
         { label: 'Zoom out', accelerator: 'CmdOrCtrl+-', click: command('zoomOut') },
@@ -157,7 +159,10 @@ function buildMenu() {
       submenu: [
         { label: 'Open example design', click: command('example') },
         { type: 'separator' },
-        { label: 'About Rack Designer', click: () => dialog.showMessageBox(win!, { title: 'Rack Designer', message: `Rack Designer ${app.getVersion()}`, detail: 'Design server racks with power and data connection modelling.' }) }
+        { label: 'Check for updates…', click: command('checkUpdates') },
+        { label: 'Release notes', click: () => void shell.openExternal(RELEASES_URL) },
+        { type: 'separator' },
+        { label: 'About Rack Designer', click: command('about') }
       ]
     }
   ]
@@ -184,6 +189,8 @@ function createWindow() {
     show: false,
     backgroundColor: '#15171b',
     title: 'Rack Designer',
+    // Installed builds take the icon from the .exe; development runs need it set explicitly.
+    ...(app.isPackaged ? {} : { icon: join(__dirname, '../../build/icon.png') }),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -304,6 +311,8 @@ function registerIpc() {
 
   ipcMain.on('app:dirty', (_e, value: boolean) => (dirty = value))
   ipcMain.on('app:title', (_e, title: string) => win?.setTitle(title))
+  ipcMain.handle('app:info', () => ({ version: app.getVersion(), packaged: app.isPackaged, portable: !!process.env['PORTABLE_EXECUTABLE_DIR'] }))
+
   ipcMain.on('app:closeAfterSave', () => {
     closing = true
     win?.close()
@@ -328,6 +337,13 @@ if (!app.requestSingleInstanceLock()) {
     registerIpc()
     buildMenu()
     createWindow()
+    const updater = initUpdater(() => win, { beforeInstall: () => (closing = true) })
+    // Check for updates quietly a little after startup, unless turned off in settings.
+    if (!process.env['RD_SCREENSHOT']) {
+      setTimeout(async () => {
+        if ((await readSettings()).autoCheckUpdates !== false) updater.checkInBackground()
+      }, 8000)
+    }
   })
   app.on('window-all-closed', () => app.quit())
 }

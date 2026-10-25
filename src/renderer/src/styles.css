@@ -153,8 +153,14 @@ kbd {
   font-size: 13px;
   margin-right: 6px;
 }
+.toolbar .brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
 .toolbar .logo {
-  color: var(--accent);
+  width: 20px;
+  height: 20px;
 }
 .toolbar .group {
   display: flex;
@@ -1058,4 +1064,192 @@ code.key {
 .share-target {
   margin-right: auto;
   align-self: center;
+}
+
+/* Port colour legend */
+.port-legend {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(27, 30, 35, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px 8px;
+  font-size: 11px;
+  max-height: calc(100% - 70px);
+  overflow-y: auto;
+}
+.port-legend-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+.port-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 1px 0;
+}
+.port-legend-row i {
+  width: 14px;
+  height: 9px;
+  border: 1.5px solid;
+  border-radius: 2px;
+  flex: none;
+}
+.port-legend-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 11px;
+}
+
+/* Port editor & arranger */
+.modal.xwide {
+  width: min(1040px, 94vw);
+}
+.code-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 10px;
+  border: 1.5px solid;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+.groups tbody tr {
+  cursor: default;
+}
+.groups tbody tr.selected td {
+  background: var(--accent-bg);
+}
+.groups td.row-actions {
+  white-space: nowrap;
+}
+.groups td:nth-child(3) select {
+  min-width: 150px;
+}
+.group-layout {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-top: 8px;
+  background: #1f2328;
+}
+.group-layout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.group-layout-title button {
+  padding: 2px 8px;
+  font-size: 11px;
+}
+.group-layout-fields {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+.group-layout-fields .row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.arranger {
+  background: #111317;
+  border-radius: 6px;
+  padding: 8px;
+  overflow-x: auto;
+}
+.arranger > .row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.arranger svg {
+  display: block;
+}
+.arranger svg.dragging {
+  cursor: grabbing;
+}
+.segmented {
+  display: inline-flex;
+}
+.segmented button {
+  border-radius: 0;
+}
+.segmented button:first-child {
+  border-radius: 4px 0 0 4px;
+}
+.segmented button:last-child {
+  border-radius: 0 4px 4px 0;
+  margin-left: -1px;
+}
+
+/* Updates */
+.update-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: #172a3f;
+  border-bottom: 1px solid #1e4a7a;
+}
+.update-progress {
+  width: 180px;
+  height: 6px;
+  border-radius: 3px;
+  background: #0d1117;
+  overflow: hidden;
+  margin: 6px 0;
+}
+.update-progress div {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s;
+}
+.modal.about {
+  width: 620px;
+}
+.about-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.about-logo {
+  width: 52px;
+  height: 52px;
+}
+.about-name {
+  font-size: 18px;
+  font-weight: 600;
+}
+.about-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.release-notes {
+  white-space: pre-wrap;
+  font: inherit;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 8px 0 0;
+  color: var(--text);
+}
+.modal-body > .row {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
 }
