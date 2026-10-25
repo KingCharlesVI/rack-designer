@@ -1,0 +1,20 @@
+appId: com.kingcharlesvi.rackdesigner
+productName: Rack Designer
+directories:
+  buildResources: build
+  output: dist
+files:
+  - out/**
+  - package.json
+win:
+  target:
+    - nsis
+    - portable
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+fileAssociations:
+  - ext: rack
+    name: Rack Designer Project
+    description: Rack Designer project file
+    role: Editor

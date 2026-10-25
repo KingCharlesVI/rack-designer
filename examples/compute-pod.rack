@@ -1,0 +1,2359 @@
+{
+  "format": "rack-designer-project",
+  "version": 1,
+  "savedAt": "2026-10-25T13:04:23.778Z",
+  "app": "Rack Designer",
+  "project": {
+    "id": "prj_c2xj30csaikl",
+    "name": "Example: compute pod",
+    "racks": [
+      {
+        "id": "rack_pisxr6hpaikl",
+        "name": "A01",
+        "uHeight": 42,
+        "widthMm": 600,
+        "depthMm": 1200,
+        "maxLoadKg": 1363,
+        "style": "4-post-enclosed",
+        "manufacturer": "APC",
+        "model": "NetShelter SX AR3300 (42U 600×1200)"
+      },
+      {
+        "id": "rack_8vj0frleaikl",
+        "name": "A02",
+        "uHeight": 42,
+        "widthMm": 600,
+        "depthMm": 1200,
+        "maxLoadKg": 1363,
+        "style": "4-post-enclosed",
+        "manufacturer": "APC",
+        "model": "NetShelter SX AR3300 (42U 600×1200)"
+      }
+    ],
+    "devices": [
+      {
+        "id": "dev_1867vciwaikm",
+        "componentId": "feed-208v-30a-l6-30r",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "feed",
+          "slot": 0
+        },
+        "name": "A01-FEED-A"
+      },
+      {
+        "id": "dev_rfkocu83aikm",
+        "componentId": "feed-208v-30a-l6-30r",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "feed",
+          "slot": 1
+        },
+        "name": "A01-FEED-B"
+      },
+      {
+        "id": "dev_itnjlv73aikm",
+        "componentId": "apc-ap8941-switched-2g-0u-208v-30a",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "zeroU",
+          "side": "left",
+          "slot": 0
+        },
+        "name": "A01-PDU-A"
+      },
+      {
+        "id": "dev_dod0q9zjaikm",
+        "componentId": "apc-ap8941-switched-2g-0u-208v-30a",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "zeroU",
+          "side": "right",
+          "slot": 0
+        },
+        "name": "A01-PDU-B"
+      },
+      {
+        "id": "dev_vq1dsr91aikm",
+        "componentId": "feed-208v-30a-l6-30r",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "feed",
+          "slot": 0
+        },
+        "name": "A02-FEED-A"
+      },
+      {
+        "id": "dev_hy6qqsznaikm",
+        "componentId": "feed-208v-30a-l6-30r",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "feed",
+          "slot": 1
+        },
+        "name": "A02-FEED-B"
+      },
+      {
+        "id": "dev_h8ta8m1laikm",
+        "componentId": "apc-ap8941-switched-2g-0u-208v-30a",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "zeroU",
+          "side": "left",
+          "slot": 0
+        },
+        "name": "A02-PDU-A"
+      },
+      {
+        "id": "dev_u4myes99aikm",
+        "componentId": "apc-ap8941-switched-2g-0u-208v-30a",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "zeroU",
+          "side": "right",
+          "slot": 0
+        },
+        "name": "A02-PDU-B"
+      },
+      {
+        "id": "dev_xsg379ttaikn",
+        "componentId": "generic-cat6-patch-panel-48-port",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 41,
+          "face": "front"
+        },
+        "name": "PP-A01-1"
+      },
+      {
+        "id": "dev_rsd6guy9aikn",
+        "componentId": "generic-horizontal-cable-manager-1u",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 40,
+          "face": "front"
+        },
+        "name": "Horizontal cable manager 1U"
+      },
+      {
+        "id": "dev_vzsbyti9aikn",
+        "componentId": "cisco-nexus-n9k-c93180yc-fx",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 39,
+          "face": "rear"
+        },
+        "name": "leaf-a"
+      },
+      {
+        "id": "dev_rsg0r8muaikn",
+        "componentId": "cisco-nexus-n9k-c93180yc-fx",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 38,
+          "face": "rear"
+        },
+        "name": "leaf-b"
+      },
+      {
+        "id": "dev_0ijo50hgaikn",
+        "componentId": "cisco-catalyst-c9300-48p",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 37,
+          "face": "rear"
+        },
+        "name": "oob-sw-01"
+      },
+      {
+        "id": "dev_vy3t662kaikn",
+        "componentId": "generic-horizontal-cable-manager-1u",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 36,
+          "face": "front"
+        },
+        "name": "Horizontal cable manager 1U"
+      },
+      {
+        "id": "dev_gttn9mpxaikn",
+        "componentId": "palo-alto-networks-pa-3410",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 35,
+          "face": "front"
+        },
+        "name": "fw-01"
+      },
+      {
+        "id": "dev_8wwc77sjaikn",
+        "componentId": "opengear-cm8148-console-manager",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 34,
+          "face": "front"
+        },
+        "name": "con-01"
+      },
+      {
+        "id": "dev_e6i2qyycaiko",
+        "componentId": "dell-poweredge-r760",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 20,
+          "face": "front"
+        },
+        "name": "esx-01"
+      },
+      {
+        "id": "dev_weslosefaiko",
+        "componentId": "dell-poweredge-r760",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 22,
+          "face": "front"
+        },
+        "name": "esx-02"
+      },
+      {
+        "id": "dev_k3sjl3bzaiko",
+        "componentId": "dell-poweredge-r760",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 24,
+          "face": "front"
+        },
+        "name": "esx-03"
+      },
+      {
+        "id": "dev_uom4zlyeaiko",
+        "componentId": "dell-poweredge-r760",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 26,
+          "face": "front"
+        },
+        "name": "esx-04"
+      },
+      {
+        "id": "dev_gd4j036paiko",
+        "componentId": "dell-poweredge-r760",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 28,
+          "face": "front"
+        },
+        "name": "esx-05"
+      },
+      {
+        "id": "dev_uepdj38uaiko",
+        "componentId": "dell-poweredge-r760",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 30,
+          "face": "front"
+        },
+        "name": "esx-06"
+      },
+      {
+        "id": "dev_owwiz5fmaiko",
+        "componentId": "generic-blanking-panel-2u",
+        "rackId": "rack_pisxr6hpaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 32,
+          "face": "front"
+        },
+        "name": "Blanking panel 2U"
+      },
+      {
+        "id": "dev_6secnzhpaiko",
+        "componentId": "generic-cat6-patch-panel-48-port",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 41,
+          "face": "front"
+        },
+        "name": "PP-A02-1"
+      },
+      {
+        "id": "dev_sf2obd7kaiko",
+        "componentId": "dell-powerstore-500t",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 36,
+          "face": "front"
+        },
+        "name": "pstore-01"
+      },
+      {
+        "id": "dev_1vy4du2taiko",
+        "componentId": "dell-poweredge-r660",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 22,
+          "face": "front"
+        },
+        "name": "k8s-01"
+      },
+      {
+        "id": "dev_jts0xt64aiko",
+        "componentId": "dell-poweredge-r660",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 23,
+          "face": "front"
+        },
+        "name": "k8s-02"
+      },
+      {
+        "id": "dev_vxyq95zvaiko",
+        "componentId": "dell-poweredge-r660",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 24,
+          "face": "front"
+        },
+        "name": "k8s-03"
+      },
+      {
+        "id": "dev_kxa665xsaikp",
+        "componentId": "dell-poweredge-r660",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 25,
+          "face": "front"
+        },
+        "name": "k8s-04"
+      },
+      {
+        "id": "dev_8izif0gwaikp",
+        "componentId": "dell-poweredge-r660",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 26,
+          "face": "front"
+        },
+        "name": "k8s-05"
+      },
+      {
+        "id": "dev_vfxgt1vqaikp",
+        "componentId": "dell-poweredge-r660",
+        "rackId": "rack_8vj0frleaikl",
+        "mount": {
+          "kind": "rack",
+          "u": 27,
+          "face": "front"
+        },
+        "name": "k8s-06"
+      }
+    ],
+    "connections": [
+      {
+        "id": "cbl_nf4i2kljaikm",
+        "a": {
+          "deviceId": "dev_1867vciwaikm",
+          "portId": "out-1"
+        },
+        "b": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-input-nema-l6-30p-1"
+        },
+        "kind": "power",
+        "cableType": "Direct (attached cord)",
+        "color": "#e11d48"
+      },
+      {
+        "id": "cbl_efbyq9a5aikm",
+        "a": {
+          "deviceId": "dev_rfkocu83aikm",
+          "portId": "out-1"
+        },
+        "b": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-input-nema-l6-30p-1"
+        },
+        "kind": "power",
+        "cableType": "Direct (attached cord)",
+        "color": "#e11d48"
+      },
+      {
+        "id": "cbl_ob4s7fzgaikm",
+        "a": {
+          "deviceId": "dev_vq1dsr91aikm",
+          "portId": "out-1"
+        },
+        "b": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-input-nema-l6-30p-1"
+        },
+        "kind": "power",
+        "cableType": "Direct (attached cord)",
+        "color": "#e11d48"
+      },
+      {
+        "id": "cbl_7azio71taikm",
+        "a": {
+          "deviceId": "dev_hy6qqsznaikm",
+          "portId": "out-1"
+        },
+        "b": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-input-nema-l6-30p-1"
+        },
+        "kind": "power",
+        "cableType": "Direct (attached cord)",
+        "color": "#e11d48"
+      },
+      {
+        "id": "cbl_vwkrfufxaikn",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_mnpruov4aikn",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_twhjumh3aikn",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_b78kgwyuaikn",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_wzxmbptkaikn",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-3"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_j8hx2uwdaikn",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-3"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_l4v6dbsuaikn",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-4"
+        },
+        "b": {
+          "deviceId": "dev_gttn9mpxaikn",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_xmhbdsn0aikn",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-4"
+        },
+        "b": {
+          "deviceId": "dev_gttn9mpxaikn",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_5d6uv749aikn",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-5"
+        },
+        "b": {
+          "deviceId": "dev_8wwc77sjaikn",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_ruor9omiaikn",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-5"
+        },
+        "b": {
+          "deviceId": "dev_8wwc77sjaikn",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_2nau3dt3aikn",
+        "a": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-qsfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-qsfp28-1"
+        },
+        "kind": "data",
+        "cableType": "100G DAC",
+        "lengthM": 0.5,
+        "color": "#a855f7",
+        "label": "VPC-1"
+      },
+      {
+        "id": "cbl_u2rubkrxaiko",
+        "a": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-qsfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-qsfp28-2"
+        },
+        "kind": "data",
+        "cableType": "100G DAC",
+        "lengthM": 0.5,
+        "color": "#a855f7",
+        "label": "VPC-2"
+      },
+      {
+        "id": "cbl_noophdqgaiko",
+        "a": {
+          "deviceId": "dev_gttn9mpxaikn",
+          "portId": "f-eth1-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-47"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 2,
+        "color": "#f97316",
+        "label": "FW-A"
+      },
+      {
+        "id": "cbl_4vqwrpacaiko",
+        "a": {
+          "deviceId": "dev_gttn9mpxaikn",
+          "portId": "f-eth1-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-47"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 2,
+        "color": "#f97316",
+        "label": "FW-B"
+      },
+      {
+        "id": "cbl_hig2j7uvaiko",
+        "a": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-console-console-rj45-1"
+        },
+        "b": {
+          "deviceId": "dev_8wwc77sjaikn",
+          "portId": "f-serial-console-rj45-1"
+        },
+        "kind": "data",
+        "cableType": "Console cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_kixp33l2aiko",
+        "a": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-console-console-rj45-1"
+        },
+        "b": {
+          "deviceId": "dev_8wwc77sjaikn",
+          "portId": "f-serial-console-rj45-2"
+        },
+        "kind": "data",
+        "cableType": "Console cable",
+        "lengthM": 2,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_48vzgz2yaiko",
+        "a": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-console-console-rj45-1"
+        },
+        "b": {
+          "deviceId": "dev_8wwc77sjaikn",
+          "portId": "f-serial-console-rj45-3"
+        },
+        "kind": "data",
+        "cableType": "Console cable",
+        "lengthM": 2,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_d8mdnlcmaiko",
+        "a": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-mgmt-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-45"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_umjrqwz6aiko",
+        "a": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-mgmt-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-46"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 0.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_349i0h3taiko",
+        "a": {
+          "deviceId": "dev_gttn9mpxaikn",
+          "portId": "f-mgmt-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-47"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 2,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_wplg1n95aiko",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-6"
+        },
+        "b": {
+          "deviceId": "dev_e6i2qyycaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 0.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_wgkt86bkaiko",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-6"
+        },
+        "b": {
+          "deviceId": "dev_e6i2qyycaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 0.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_2oxr4arsaiko",
+        "a": {
+          "deviceId": "dev_e6i2qyycaiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-1"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_d0j2711gaiko",
+        "a": {
+          "deviceId": "dev_e6i2qyycaiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-1"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_gy4ioignaiko",
+        "a": {
+          "deviceId": "dev_e6i2qyycaiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-1"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_wybbre5xaiko",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-7"
+        },
+        "b": {
+          "deviceId": "dev_weslosefaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_s1xy0rbmaiko",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-7"
+        },
+        "b": {
+          "deviceId": "dev_weslosefaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_wn4zoqynaiko",
+        "a": {
+          "deviceId": "dev_weslosefaiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-2"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_5urrp1yhaiko",
+        "a": {
+          "deviceId": "dev_weslosefaiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-2"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_cx1qalraaiko",
+        "a": {
+          "deviceId": "dev_weslosefaiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-2"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_cn69nflpaiko",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-8"
+        },
+        "b": {
+          "deviceId": "dev_k3sjl3bzaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_v4dyplbpaiko",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-8"
+        },
+        "b": {
+          "deviceId": "dev_k3sjl3bzaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_pl0rpz7zaiko",
+        "a": {
+          "deviceId": "dev_k3sjl3bzaiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-3"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_s9np9lb6aiko",
+        "a": {
+          "deviceId": "dev_k3sjl3bzaiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-3"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_nghv70bzaiko",
+        "a": {
+          "deviceId": "dev_k3sjl3bzaiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-3"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_ih7nrczvaiko",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-9"
+        },
+        "b": {
+          "deviceId": "dev_uom4zlyeaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_klxr2jayaiko",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-9"
+        },
+        "b": {
+          "deviceId": "dev_uom4zlyeaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_narne3x8aiko",
+        "a": {
+          "deviceId": "dev_uom4zlyeaiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-4"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_oevn03zaaiko",
+        "a": {
+          "deviceId": "dev_uom4zlyeaiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-4"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_kuoy8c7saiko",
+        "a": {
+          "deviceId": "dev_uom4zlyeaiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-4"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_oqxek1xaaiko",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-10"
+        },
+        "b": {
+          "deviceId": "dev_gd4j036paiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_zoc26flcaiko",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-10"
+        },
+        "b": {
+          "deviceId": "dev_gd4j036paiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_jc2ku78haiko",
+        "a": {
+          "deviceId": "dev_gd4j036paiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-5"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_lt2ly7egaiko",
+        "a": {
+          "deviceId": "dev_gd4j036paiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-5"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_ioe7qpkkaiko",
+        "a": {
+          "deviceId": "dev_gd4j036paiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-5"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_ckzrk2x7aiko",
+        "a": {
+          "deviceId": "dev_itnjlv73aikm",
+          "portId": "f-c13-c13-11"
+        },
+        "b": {
+          "deviceId": "dev_uepdj38uaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_dk0l4fmoaiko",
+        "a": {
+          "deviceId": "dev_dod0q9zjaikm",
+          "portId": "f-c13-c13-11"
+        },
+        "b": {
+          "deviceId": "dev_uepdj38uaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_w8rpav9zaiko",
+        "a": {
+          "deviceId": "dev_uepdj38uaiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-6"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_lbffzjo2aiko",
+        "a": {
+          "deviceId": "dev_uepdj38uaiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-6"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_lqala6zbaiko",
+        "a": {
+          "deviceId": "dev_uepdj38uaiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-6"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_vbfc7wjoaiko",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-1"
+        },
+        "b": {
+          "deviceId": "dev_sf2obd7kaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_e4hokb4gaiko",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-1"
+        },
+        "b": {
+          "deviceId": "dev_sf2obd7kaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1.5,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_t8lb3f41aiko",
+        "a": {
+          "deviceId": "dev_sf2obd7kaiko",
+          "portId": "r-a-mezz-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-40"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#22c55e",
+        "label": "PS-A1"
+      },
+      {
+        "id": "cbl_jhvertqpaiko",
+        "a": {
+          "deviceId": "dev_sf2obd7kaiko",
+          "portId": "r-b-mezz-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-40"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#22c55e",
+        "label": "PS-B1"
+      },
+      {
+        "id": "cbl_7kejva2eaiko",
+        "a": {
+          "deviceId": "dev_sf2obd7kaiko",
+          "portId": "r-a-mgmt-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-40"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_emujoeekaiko",
+        "a": {
+          "deviceId": "dev_sf2obd7kaiko",
+          "portId": "r-b-mgmt-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-41"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_zl9yeb0eaiko",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-2"
+        },
+        "b": {
+          "deviceId": "dev_1vy4du2taiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_lc0ybs27aiko",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-2"
+        },
+        "b": {
+          "deviceId": "dev_1vy4du2taiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_hfmsuclzaiko",
+        "a": {
+          "deviceId": "dev_1vy4du2taiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-7"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 5,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_c33kcav0aiko",
+        "a": {
+          "deviceId": "dev_1vy4du2taiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-7"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 5,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_5qjp4czuaiko",
+        "a": {
+          "deviceId": "dev_1vy4du2taiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-7"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 5,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_mfwi6ivwaiko",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-3"
+        },
+        "b": {
+          "deviceId": "dev_jts0xt64aiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_cyatgsxdaiko",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-3"
+        },
+        "b": {
+          "deviceId": "dev_jts0xt64aiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_lo466r1haiko",
+        "a": {
+          "deviceId": "dev_jts0xt64aiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-8"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_qqg5j629aiko",
+        "a": {
+          "deviceId": "dev_jts0xt64aiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-8"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 5,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_sjnjjcu8aiko",
+        "a": {
+          "deviceId": "dev_jts0xt64aiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-8"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 5,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_u7clt5liaikp",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-4"
+        },
+        "b": {
+          "deviceId": "dev_vxyq95zvaiko",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_nsqp1nl0aikp",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-4"
+        },
+        "b": {
+          "deviceId": "dev_vxyq95zvaiko",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_xgs56egdaikp",
+        "a": {
+          "deviceId": "dev_vxyq95zvaiko",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-9"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_oncs20jsaikp",
+        "a": {
+          "deviceId": "dev_vxyq95zvaiko",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-9"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_cmiwm3gyaikp",
+        "a": {
+          "deviceId": "dev_vxyq95zvaiko",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-9"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 5,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_hk4ic1draikp",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-5"
+        },
+        "b": {
+          "deviceId": "dev_kxa665xsaikp",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_1uyto0k6aikp",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-5"
+        },
+        "b": {
+          "deviceId": "dev_kxa665xsaikp",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_inuc8rcpaikp",
+        "a": {
+          "deviceId": "dev_kxa665xsaikp",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-10"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_2r69aa4maikp",
+        "a": {
+          "deviceId": "dev_kxa665xsaikp",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-10"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_96nmhwbnaikp",
+        "a": {
+          "deviceId": "dev_kxa665xsaikp",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-10"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_1nzdkjnmaikp",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-6"
+        },
+        "b": {
+          "deviceId": "dev_8izif0gwaikp",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_32ghoq3zaikp",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-6"
+        },
+        "b": {
+          "deviceId": "dev_8izif0gwaikp",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_q1aa6r6baikp",
+        "a": {
+          "deviceId": "dev_8izif0gwaikp",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-11"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_hwt2aqx6aikp",
+        "a": {
+          "deviceId": "dev_8izif0gwaikp",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-11"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_jgrq70xdaikp",
+        "a": {
+          "deviceId": "dev_8izif0gwaikp",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-11"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      },
+      {
+        "id": "cbl_2r2gv6smaikp",
+        "a": {
+          "deviceId": "dev_h8ta8m1laikm",
+          "portId": "f-c13-c13-7"
+        },
+        "b": {
+          "deviceId": "dev_vfxgt1vqaikp",
+          "portId": "r-psu-c14-1"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#ef4444"
+      },
+      {
+        "id": "cbl_r0cfbaw9aikp",
+        "a": {
+          "deviceId": "dev_u4myes99aikm",
+          "portId": "f-c13-c13-7"
+        },
+        "b": {
+          "deviceId": "dev_vfxgt1vqaikp",
+          "portId": "r-psu-c14-2"
+        },
+        "kind": "power",
+        "cableType": "Power cord C14–C13",
+        "lengthM": 1,
+        "color": "#3b82f6"
+      },
+      {
+        "id": "cbl_krwavf8laikp",
+        "a": {
+          "deviceId": "dev_vfxgt1vqaikp",
+          "portId": "r-ocp-sfp28-1"
+        },
+        "b": {
+          "deviceId": "dev_vzsbyti9aikn",
+          "portId": "f-eth1-sfp28-12"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_rn9w50v5aikp",
+        "a": {
+          "deviceId": "dev_vfxgt1vqaikp",
+          "portId": "r-ocp-sfp28-2"
+        },
+        "b": {
+          "deviceId": "dev_rsg0r8muaikn",
+          "portId": "f-eth1-sfp28-12"
+        },
+        "kind": "data",
+        "cableType": "25G DAC",
+        "lengthM": 3,
+        "color": "#06b6d4"
+      },
+      {
+        "id": "cbl_09h9q39jaikp",
+        "a": {
+          "deviceId": "dev_vfxgt1vqaikp",
+          "portId": "r-idrac-rj45-mgmt-1"
+        },
+        "b": {
+          "deviceId": "dev_0ijo50hgaikn",
+          "portId": "f-gi1-0-rj45-poe-12"
+        },
+        "kind": "data",
+        "cableType": "Cat6A patch cable",
+        "lengthM": 3,
+        "color": "#eab308"
+      }
+    ],
+    "components": {
+      "feed-208v-30a-l6-30r": {
+        "id": "feed-208v-30a-l6-30r",
+        "manufacturer": "Facility",
+        "model": "208V 30A (L6-30R)",
+        "category": "feed",
+        "uHeight": 0,
+        "fullDepth": false,
+        "feed": {
+          "voltage": 208,
+          "amps": 30,
+          "phases": 1
+        },
+        "ports": [
+          {
+            "id": "out",
+            "type": "nema-l6-30r",
+            "count": 1,
+            "face": "front",
+            "names": [
+              "Out"
+            ],
+            "start": 1
+          }
+        ],
+        "description": "Facility circuit: 208V 30A",
+        "generic": true
+      },
+      "apc-ap8941-switched-2g-0u-208v-30a": {
+        "manufacturer": "APC",
+        "model": "AP8941 Switched 2G 0U 208V 30A",
+        "category": "pdu",
+        "uHeight": 0,
+        "fullDepth": false,
+        "depthMm": 60,
+        "lengthMm": 1830,
+        "power": {
+          "typicalW": 0,
+          "maxW": 0
+        },
+        "pdu": {
+          "voltage": 208,
+          "maxAmps": 24,
+          "metered": true,
+          "switched": true
+        },
+        "ports": [
+          {
+            "id": "f-input-nema-l6-30p",
+            "type": "nema-l6-30p",
+            "count": 1,
+            "face": "front",
+            "label": "Input",
+            "names": [
+              "Input"
+            ],
+            "start": 1
+          },
+          {
+            "id": "f-c13-c13",
+            "type": "c13",
+            "count": 21,
+            "face": "front",
+            "label": "C13-",
+            "start": 1
+          },
+          {
+            "id": "f-c19-c19",
+            "type": "c19",
+            "count": 3,
+            "face": "front",
+            "label": "C19-",
+            "start": 1
+          },
+          {
+            "id": "f-net-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "front",
+            "label": "Net",
+            "names": [
+              "Net"
+            ],
+            "start": 1
+          }
+        ],
+        "color": "#1a1a1a",
+        "description": "Switched PDU, 208V 24A",
+        "id": "apc-ap8941-switched-2g-0u-208v-30a"
+      },
+      "generic-cat6-patch-panel-48-port": {
+        "id": "generic-cat6-patch-panel-48-port",
+        "manufacturer": "Generic",
+        "model": "Cat6 patch panel 48-port",
+        "category": "patch-panel",
+        "uHeight": 2,
+        "fullDepth": false,
+        "depthMm": 100,
+        "ports": [
+          {
+            "id": "f-rj45-rj45",
+            "type": "rj45",
+            "count": 48,
+            "face": "front",
+            "label": "",
+            "rows": 2,
+            "start": 1
+          },
+          {
+            "id": "r-rj45-rj45",
+            "type": "rj45",
+            "count": 48,
+            "face": "rear",
+            "label": "",
+            "rows": 2,
+            "start": 1
+          }
+        ],
+        "color": "#262626",
+        "generic": true
+      },
+      "generic-horizontal-cable-manager-1u": {
+        "id": "generic-horizontal-cable-manager-1u",
+        "manufacturer": "Generic",
+        "model": "Horizontal cable manager 1U",
+        "category": "cable-management",
+        "uHeight": 1,
+        "fullDepth": false,
+        "depthMm": 90,
+        "ports": [],
+        "color": "#151515",
+        "generic": true
+      },
+      "cisco-nexus-n9k-c93180yc-fx": {
+        "manufacturer": "Cisco",
+        "model": "Nexus N9K-C93180YC-FX",
+        "category": "switch",
+        "uHeight": 1,
+        "fullDepth": true,
+        "depthMm": 559,
+        "power": {
+          "typicalW": 260,
+          "maxW": 500
+        },
+        "ports": [
+          {
+            "id": "f-eth1-sfp28",
+            "type": "sfp28",
+            "count": 48,
+            "face": "front",
+            "label": "Eth1/",
+            "speed": "25G",
+            "start": 1
+          },
+          {
+            "id": "f-eth1-qsfp28",
+            "type": "qsfp28",
+            "count": 6,
+            "face": "front",
+            "label": "Eth1/",
+            "speed": "100G",
+            "start": 49
+          },
+          {
+            "id": "f-mgmt-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "front",
+            "label": "Mgmt",
+            "names": [
+              "Mgmt"
+            ],
+            "start": 1
+          },
+          {
+            "id": "f-console-console-rj45",
+            "type": "console-rj45",
+            "count": 1,
+            "face": "front",
+            "label": "Console",
+            "names": [
+              "Console"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ],
+        "color": "#2f363f",
+        "id": "cisco-nexus-n9k-c93180yc-fx"
+      },
+      "cisco-catalyst-c9300-48p": {
+        "manufacturer": "Cisco",
+        "model": "Catalyst C9300-48P",
+        "category": "switch",
+        "uHeight": 1,
+        "fullDepth": false,
+        "depthMm": 445,
+        "power": {
+          "typicalW": 110,
+          "maxW": 1100
+        },
+        "ports": [
+          {
+            "id": "f-gi1-0-rj45-poe",
+            "type": "rj45-poe",
+            "count": 48,
+            "face": "front",
+            "label": "Gi1/0/",
+            "speed": "1G",
+            "start": 1
+          },
+          {
+            "id": "f-te1-1-sfpplus",
+            "type": "sfp+",
+            "count": 8,
+            "face": "front",
+            "label": "Te1/1/",
+            "speed": "10G",
+            "start": 1
+          },
+          {
+            "id": "f-mgmt-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "front",
+            "label": "Mgmt",
+            "names": [
+              "Mgmt"
+            ],
+            "start": 1
+          },
+          {
+            "id": "f-console-console-rj45",
+            "type": "console-rj45",
+            "count": 1,
+            "face": "front",
+            "label": "Console",
+            "names": [
+              "Console"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-stack-stack",
+            "type": "stack",
+            "count": 2,
+            "face": "rear",
+            "label": "Stack",
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ],
+        "color": "#3b4652",
+        "id": "cisco-catalyst-c9300-48p"
+      },
+      "palo-alto-networks-pa-3410": {
+        "manufacturer": "Palo Alto Networks",
+        "model": "PA-3410",
+        "category": "firewall",
+        "uHeight": 1,
+        "fullDepth": true,
+        "depthMm": 500,
+        "power": {
+          "typicalW": 150,
+          "maxW": 300
+        },
+        "ports": [
+          {
+            "id": "f-eth1-rj45",
+            "type": "rj45",
+            "count": 12,
+            "face": "front",
+            "label": "Eth1/",
+            "speed": "1G",
+            "start": 1
+          },
+          {
+            "id": "f-eth1-sfp",
+            "type": "sfp",
+            "count": 4,
+            "face": "front",
+            "label": "Eth1/",
+            "speed": "1G",
+            "start": 13
+          },
+          {
+            "id": "f-eth1-sfp28",
+            "type": "sfp28",
+            "count": 4,
+            "face": "front",
+            "label": "Eth1/",
+            "speed": "25G",
+            "start": 17
+          },
+          {
+            "id": "f-mgmt-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "front",
+            "label": "Mgmt",
+            "names": [
+              "Mgmt"
+            ],
+            "start": 1
+          },
+          {
+            "id": "f-console-console-rj45",
+            "type": "console-rj45",
+            "count": 1,
+            "face": "front",
+            "label": "Console",
+            "names": [
+              "Console"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ],
+        "color": "#3b3328",
+        "id": "palo-alto-networks-pa-3410"
+      },
+      "opengear-cm8148-console-manager": {
+        "id": "opengear-cm8148-console-manager",
+        "manufacturer": "Opengear",
+        "model": "CM8148 console manager",
+        "category": "console-server",
+        "uHeight": 1,
+        "fullDepth": false,
+        "power": {
+          "typicalW": 20,
+          "maxW": 40
+        },
+        "ports": [
+          {
+            "id": "f-serial-console-rj45",
+            "type": "console-rj45",
+            "count": 48,
+            "face": "front",
+            "label": "Serial",
+            "start": 1
+          },
+          {
+            "id": "r-net-rj45",
+            "type": "rj45",
+            "count": 2,
+            "face": "rear",
+            "label": "Net",
+            "speed": "1G",
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ]
+      },
+      "dell-poweredge-r760": {
+        "manufacturer": "Dell",
+        "model": "PowerEdge R760",
+        "category": "server",
+        "uHeight": 2,
+        "fullDepth": true,
+        "depthMm": 772,
+        "weightKg": 29,
+        "power": {
+          "typicalW": 450,
+          "maxW": 1800
+        },
+        "ports": [
+          {
+            "id": "f-usb-usb-a",
+            "type": "usb-a",
+            "count": 1,
+            "face": "front",
+            "label": "USB",
+            "names": [
+              "USB"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-idrac-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "rear",
+            "label": "iDRAC",
+            "names": [
+              "iDRAC"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-lom-rj45",
+            "type": "rj45",
+            "count": 2,
+            "face": "rear",
+            "label": "LOM",
+            "speed": "1G",
+            "start": 1
+          },
+          {
+            "id": "r-ocp-sfp28",
+            "type": "sfp28",
+            "count": 2,
+            "face": "rear",
+            "label": "OCP",
+            "speed": "25G",
+            "start": 1
+          },
+          {
+            "id": "r-vga-vga",
+            "type": "vga",
+            "count": 1,
+            "face": "rear",
+            "label": "VGA",
+            "names": [
+              "VGA"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-usb-usb-a",
+            "type": "usb-a",
+            "count": 2,
+            "face": "rear",
+            "label": "USB",
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ],
+        "color": "#2b2f36",
+        "id": "dell-poweredge-r760"
+      },
+      "generic-blanking-panel-2u": {
+        "id": "generic-blanking-panel-2u",
+        "manufacturer": "Generic",
+        "model": "Blanking panel 2U",
+        "category": "blank",
+        "uHeight": 2,
+        "fullDepth": false,
+        "depthMm": 20,
+        "ports": [],
+        "color": "#0e0e0e",
+        "generic": true
+      },
+      "dell-powerstore-500t": {
+        "manufacturer": "Dell",
+        "model": "PowerStore 500T",
+        "category": "storage",
+        "uHeight": 2,
+        "fullDepth": true,
+        "depthMm": 800,
+        "weightKg": 40,
+        "power": {
+          "typicalW": 700,
+          "maxW": 1400
+        },
+        "ports": [
+          {
+            "id": "r-a-mezz-sfp28",
+            "type": "sfp28",
+            "count": 4,
+            "face": "rear",
+            "label": "A-Mezz",
+            "speed": "25G",
+            "start": 1
+          },
+          {
+            "id": "r-b-mezz-sfp28",
+            "type": "sfp28",
+            "count": 4,
+            "face": "rear",
+            "label": "B-Mezz",
+            "speed": "25G",
+            "start": 1
+          },
+          {
+            "id": "r-a-mgmt-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "rear",
+            "label": "A-Mgmt",
+            "names": [
+              "A-Mgmt"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-b-mgmt-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "rear",
+            "label": "B-Mgmt",
+            "names": [
+              "B-Mgmt"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ],
+        "color": "#2b2f36",
+        "id": "dell-powerstore-500t"
+      },
+      "dell-poweredge-r660": {
+        "manufacturer": "Dell",
+        "model": "PowerEdge R660",
+        "category": "server",
+        "uHeight": 1,
+        "fullDepth": true,
+        "depthMm": 822,
+        "weightKg": 21,
+        "power": {
+          "typicalW": 380,
+          "maxW": 1400
+        },
+        "ports": [
+          {
+            "id": "f-usb-usb-a",
+            "type": "usb-a",
+            "count": 1,
+            "face": "front",
+            "label": "USB",
+            "names": [
+              "USB"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-idrac-rj45-mgmt",
+            "type": "rj45-mgmt",
+            "count": 1,
+            "face": "rear",
+            "label": "iDRAC",
+            "names": [
+              "iDRAC"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-lom-rj45",
+            "type": "rj45",
+            "count": 2,
+            "face": "rear",
+            "label": "LOM",
+            "speed": "1G",
+            "start": 1
+          },
+          {
+            "id": "r-ocp-sfp28",
+            "type": "sfp28",
+            "count": 2,
+            "face": "rear",
+            "label": "OCP",
+            "speed": "25G",
+            "start": 1
+          },
+          {
+            "id": "r-vga-vga",
+            "type": "vga",
+            "count": 1,
+            "face": "rear",
+            "label": "VGA",
+            "names": [
+              "VGA"
+            ],
+            "start": 1
+          },
+          {
+            "id": "r-usb-usb-a",
+            "type": "usb-a",
+            "count": 2,
+            "face": "rear",
+            "label": "USB",
+            "start": 1
+          },
+          {
+            "id": "r-psu-c14",
+            "type": "c14",
+            "count": 2,
+            "face": "rear",
+            "label": "PSU",
+            "start": 1
+          }
+        ],
+        "color": "#2b2f36",
+        "id": "dell-poweredge-r660"
+      }
+    },
+    "settings": {
+      "powerBasis": "typical",
+      "derating": 0.8
+    },
+    "notes": "Two 42U racks with A/B power feeds, top-of-rack switching and cross-rack uplinks."
+  }
+}
