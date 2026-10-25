@@ -70,6 +70,44 @@ export async function deleteLibrary(name: string): Promise<void> {
   localStorage.setItem(LS_KEY, JSON.stringify((await listLibrary()).filter((f) => f.name !== name)))
 }
 
+export async function fetchText(url: string): Promise<string> {
+  if (api) return api.fetchText(url)
+  const res = await fetch(url, { cache: 'no-cache' })
+  if (!res.ok) throw new Error(`${res.status} fetching ${url}`)
+  return res.text()
+}
+
+export async function postJson(url: string, body: string, key?: string): Promise<{ status: number; data: unknown }> {
+  if (api) return api.postJson(url, body, key)
+  const headers: Record<string, string> = { 'content-type': 'application/json' }
+  if (key) headers['x-pack-key'] = key
+  const res = await fetch(url, { method: 'POST', body, headers })
+  return { status: res.status, data: await res.json().catch(() => ({ error: res.statusText })) }
+}
+
+export async function openExternal(url: string): Promise<void> {
+  if (api) return api.openExternal(url)
+  window.open(url, '_blank', 'noopener')
+}
+
+const SETTINGS_KEY = 'rack-designer-settings'
+
+export async function getSettings(): Promise<Record<string, unknown>> {
+  if (api) return api.getSettings()
+  try {
+    return JSON.parse(localStorage.getItem(SETTINGS_KEY) ?? '{}')
+  } catch {
+    return {}
+  }
+}
+
+export async function setSettings(patch: Record<string, unknown>): Promise<Record<string, unknown>> {
+  if (api) return api.setSettings(patch)
+  const next = { ...(await getSettings()), ...patch }
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(next))
+  return next
+}
+
 export const setDirty = (dirty: boolean) => api?.setDirty(dirty)
 export const setTitle = (title: string) => {
   document.title = title

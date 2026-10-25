@@ -1,0 +1,33 @@
+{
+  "format": "rack-designer-registry",
+  "version": 1,
+  "name": "Rack Designer community packs",
+  "updated": "2026-10-25T14:06:34.027Z",
+  "packs": [
+    {
+      "id": "rack-designer.homelab-starter",
+      "name": "Homelab starter",
+      "packVersion": "1.0.0",
+      "author": "Rack Designer",
+      "description": "Example community pack: mini-PC and Raspberry Pi rack mounts, plus the famous IKEA LACK 'LackRack'. Power figures are typical estimates; mini PCs use external bricks, modelled as C14 inputs.",
+      "license": "CC0-1.0",
+      "tags": [
+        "homelab",
+        "mini-pc",
+        "raspberry-pi",
+        "example"
+      ],
+      "components": 3,
+      "racks": 1,
+      "manufacturers": [
+        "IKEA",
+        "Lenovo",
+        "Minisforum",
+        "UCTRONICS"
+      ],
+      "path": "packs/rack-designer.homelab-starter.json",
+      "sha256": "24aa0a054fe660c80b076f7691007f8b32a6745e637757af9cb9cb21fbd3776f",
+      "size": 2668
+    }
+  ]
+}

@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Community pack checksums are computed over LF line endings
+community/**/*.json text eol=lf
+*.sh text eol=lf

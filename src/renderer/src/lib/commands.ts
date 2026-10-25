@@ -3,7 +3,8 @@ import { closeAfterSave, deleteLibrary, FILTERS, listLibrary, openFile, saveFile
 import { elevationSvg, svgToPng } from './exportDrawing'
 import { addDevice, findDevice, findFreeMount, getComponent, mergeProject, uid } from '../model/project'
 import { billOfMaterials, cableSchedule, powerReport, toCsv } from '../model/reports'
-import { FileFormatError, parseLibrary, parseProject, serializeLibrary, serializeProject, type LibraryPack } from '../model/serialize'
+import { FileFormatError, parseProject, serializePack, serializeProject } from '../model/serialize'
+import { customPack, exportPackFile, installFromFile } from './packCommands'
 import { buildExample } from '../model/example'
 import type { ComponentDef } from '../model/types'
 import { isDirty, starterProject, useStore } from '../store'
@@ -97,36 +98,28 @@ export async function reloadLibrary() {
 }
 
 export async function importLibrary() {
-  const file = await openFile(FILTERS.library, 'Import library pack')
-  if (!file) return
   try {
-    const pack = parseLibrary(file.content)
-    const name = `${baseName(file.path)}.json`
-    await saveLibrary(name, serializeLibrary(pack.name, pack.components, pack.racks))
-    await reloadLibrary()
-    S().toast(`Imported "${pack.name}": ${pack.components.length} component(s), ${pack.racks?.length ?? 0} rack(s)`, 'success')
+    const r = await installFromFile()
+    if (!r) return
+    S().toast(`Installed "${r.pack.name}": ${r.pack.components.length} component(s), ${r.pack.racks?.length ?? 0} rack(s)`, 'success')
+    if (r.warnings.length) S().toast(`${r.warnings.length} warning(s): ${r.warnings[0]}`, 'info')
   } catch (e) {
     reportError(e)
   }
 }
 
 export async function exportLibrary() {
-  const custom = S().userPacks.flatMap((p) => p.pack.components)
-  if (!custom.length) {
-    S().toast('There are no custom or imported components to export yet', 'info')
+  if (!S().userPacks.some((p) => p.file === CUSTOM_LIBRARY_FILE)) {
+    S().toast('You have no custom components or racks to export yet', 'info')
     return
   }
-  await saveFileAs('rack-library.json', FILTERS.library, serializeLibrary('My components', custom, S().userPacks.flatMap((p) => p.pack.racks ?? [])), 'Export library')
-}
-
-function customPack(): LibraryPack {
-  return S().userPacks.find((p) => p.file === CUSTOM_LIBRARY_FILE)?.pack ?? { format: 'rack-designer-library', version: 1, name: 'Custom components', components: [], racks: [] }
+  await exportPackFile(CUSTOM_LIBRARY_FILE)
 }
 
 export async function saveCustomComponent(comp: ComponentDef) {
   const pack = customPack()
   const components = [...pack.components.filter((c) => c.id !== comp.id), comp]
-  await saveLibrary(CUSTOM_LIBRARY_FILE, serializeLibrary(pack.name, components, pack.racks))
+  await saveLibrary(CUSTOM_LIBRARY_FILE, serializePack({ ...pack, components }))
   await reloadLibrary()
   // Keep designs that already use this component in sync with the new definition.
   if (S().project.components[comp.id]) {
@@ -139,13 +132,13 @@ export async function saveCustomComponent(comp: ComponentDef) {
 export async function deleteCustomComponent(id: string) {
   const pack = customPack()
   const components = pack.components.filter((c) => c.id !== id)
-  if (components.length || pack.racks?.length) await saveLibrary(CUSTOM_LIBRARY_FILE, serializeLibrary(pack.name, components, pack.racks))
+  if (components.length || pack.racks?.length) await saveLibrary(CUSTOM_LIBRARY_FILE, serializePack({ ...pack, components }))
   else await deleteLibrary(CUSTOM_LIBRARY_FILE)
   await reloadLibrary()
 }
 
-export function newCustomId(model: string): string {
-  return `custom-${model.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${uid().slice(0, 4)}`
+export function newCustomId(model: string, prefix = 'custom'): string {
+  return `${prefix}-${model.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}-${uid().slice(0, 4)}`
 }
 
 async function exportCsv(suffix: string, rows: Record<string, unknown>[], headers?: Record<string, string>) {

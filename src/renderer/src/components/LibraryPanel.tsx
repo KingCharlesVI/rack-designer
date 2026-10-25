@@ -1,6 +1,7 @@
 import { useDeferredValue, useMemo, useState } from 'react'
 import { CATEGORY_LABELS, searchComponents } from '../library'
-import { deleteCustomComponent, importLibrary, quickAdd } from '../lib/commands'
+import { CUSTOM_LIBRARY_FILE, deleteCustomComponent, quickAdd } from '../lib/commands'
+import { deleteCustomRack } from '../lib/packCommands'
 import { getPorts, portType } from '../model/ports'
 import { nextRackName, rackFromDef } from '../model/project'
 import type { Category, ComponentDef, RackDef } from '../model/types'
@@ -33,9 +34,10 @@ function ComponentList() {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState<Category | ''>('')
   const [manufacturer, setManufacturer] = useState('')
+  const [source, setSource] = useState('')
   const [limit, setLimit] = useState(PAGE)
   const deferred = useDeferredValue(query)
-  const results = useMemo(() => searchComponents(catalog, { query: deferred, category, manufacturer }), [catalog, deferred, category, manufacturer])
+  const results = useMemo(() => searchComponents(catalog, { query: deferred, category, manufacturer, source }), [catalog, deferred, category, manufacturer, source])
   const grouped = useMemo(() => {
     const m = new Map<Category, ComponentDef[]>()
     for (const c of results.slice(0, limit)) {
@@ -69,10 +71,21 @@ function ComponentList() {
             ))}
           </select>
         </div>
+        {catalog.sources.size > 0 && (
+          <select value={source} onChange={(e) => (setSource(e.target.value), setLimit(PAGE))}>
+            <option value="">All sources</option>
+            <option value="builtin">Built-in library</option>
+            {[...catalog.sources.values()].map((src) => (
+              <option key={src.file} value={src.file}>
+                {src.file === CUSTOM_LIBRARY_FILE ? 'My components' : `Pack: ${src.name}`}
+              </option>
+            ))}
+          </select>
+        )}
         <div className="row">
           <button onClick={() => openDialog({ kind: 'custom-component' })}>+ Custom component</button>
-          <button onClick={importLibrary} title="Import a library pack (.json)">
-            Import pack…
+          <button onClick={() => openDialog({ kind: 'community' })} title="Browse, install and share community packs">
+            Community packs…
           </button>
         </div>
       </div>
@@ -114,9 +127,20 @@ function portSummary(c: ComponentDef): string {
   return [...counts.entries()].map(([n, k]) => `${k}× ${n}`).join(', ')
 }
 
+function SourceBadge({ source }: { source?: string }) {
+  const name = useStore((s) => (source ? s.catalog.sources.get(source)?.name : undefined))
+  if (!source) return null
+  if (source === CUSTOM_LIBRARY_FILE) return <span className="src-badge mine">mine</span>
+  return (
+    <span className="src-badge" title={`From pack "${name}"`}>
+      {name}
+    </span>
+  )
+}
+
 function ComponentItem({ comp }: { comp: ComponentDef }) {
   const openDialog = useStore((s) => s.openDialog)
-  const isCustom = !!comp.source
+  const isCustom = comp.source === CUSTOM_LIBRARY_FILE
   const height = comp.uHeight === 0 ? (comp.category === 'feed' ? 'feed' : '0U') : `${comp.uHeight}U`
   const power = comp.power?.typicalW ? `${comp.power.typicalW} W` : comp.pdu ? `${comp.pdu.voltage}V ${comp.pdu.maxAmps}A` : comp.ups ? `${comp.ups.capacityW} W` : ''
   const tip = [`${comp.manufacturer} ${comp.model}`, comp.description, portSummary(comp)].filter(Boolean).join('\n')
@@ -137,6 +161,7 @@ function ComponentItem({ comp }: { comp: ComponentDef }) {
       <span className="library-item-text">
         <span className="model">{comp.model}</span>
         <span className="maker">
+          <SourceBadge source={comp.source} />
           {comp.manufacturer}
           {power && ` · ${power}`}
         </span>
@@ -170,6 +195,7 @@ function RackList() {
   const catalog = useStore((s) => s.catalog)
   const edit = useStore((s) => s.edit)
   const select = useStore((s) => s.select)
+  const openDialog = useStore((s) => s.openDialog)
   const [query, setQuery] = useState('')
   const racks = useMemo(() => {
     const terms = query.toLowerCase().split(/\s+/).filter(Boolean)
@@ -193,6 +219,10 @@ function RackList() {
     <>
       <div className="library-filters">
         <input type="search" placeholder={`Search ${catalog.racks.length} rack models…`} value={query} onChange={(e) => setQuery(e.target.value)} />
+        <div className="row">
+          <button onClick={() => openDialog({ kind: 'custom-rack' })}>+ Custom rack</button>
+          <button onClick={() => openDialog({ kind: 'community' })}>Community packs…</button>
+        </div>
       </div>
       <div className="library-list">
         {racks.map((r) => (
@@ -201,10 +231,30 @@ function RackList() {
             <span className="library-item-text">
               <span className="model">{r.model}</span>
               <span className="maker">
+                <SourceBadge source={r.source} />
                 {r.manufacturer} · {r.widthMm}×{r.depthMm} mm · {r.style.replace(/-/g, ' ')}
               </span>
             </span>
-            <span className="item-actions visible">
+            <span className="item-actions">
+              {r.source === CUSTOM_LIBRARY_FILE ? (
+                <>
+                  <button title="Edit" onClick={() => openDialog({ kind: 'custom-rack', rackId: r.id })}>
+                    ✎
+                  </button>
+                  <button
+                    title="Delete from library"
+                    onClick={() => {
+                      if (window.confirm(`Delete ${r.model} from your library? Racks already in designs are not affected.`)) void deleteCustomRack(r.id)
+                    }}
+                  >
+                    ×
+                  </button>
+                </>
+              ) : (
+                <button title="Copy into a custom rack" onClick={() => openDialog({ kind: 'custom-rack', rackId: r.id, duplicate: true })}>
+                  ⧉
+                </button>
+              )}
               <button onClick={() => add(r)}>Add</button>
             </span>
           </div>

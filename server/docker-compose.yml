@@ -1,0 +1,19 @@
+# Run from this folder:
+#   cp .env.example .env    (then set ADMIN_TOKEN)
+#   docker compose up -d --build
+services:
+  registry:
+    build:
+      context: ..
+      dockerfile: server/Dockerfile
+    image: rack-designer-registry:latest
+    container_name: rack-registry
+    restart: unless-stopped
+    ports:
+      - "5010:5010"
+    env_file: .env
+    volumes:
+      - registry-data:/data
+
+volumes:
+  registry-data:

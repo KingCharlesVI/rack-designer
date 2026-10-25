@@ -1,10 +1,56 @@
 // Community packs: validation of untrusted pack data, id namespacing, versions and
 // the registry index format. Pure functions, shared by the app and the registry script.
 import { PORT_TYPES } from './ports'
-import { LIBRARY_FORMAT, LIBRARY_VERSION, type LibraryPack } from './serialize'
 import type { Category, ComponentDef, PortGroup, RackDef } from './types'
 
+export const LIBRARY_FORMAT = 'rack-designer-library'
+export const LIBRARY_VERSION = 2
+
+export interface LibraryPack {
+  format: typeof LIBRARY_FORMAT
+  version: number
+  /** Globally unique id, e.g. "jane.homelab-gear". Required for community packs. */
+  id?: string
+  name: string
+  packVersion?: string
+  author?: string
+  description?: string
+  license?: string
+  homepage?: string
+  tags?: string[]
+  components: ComponentDef[]
+  racks?: RackDef[]
+}
+
+export function serializePack(pack: LibraryPack): string {
+  const strip = <T extends { source?: string }>(x: T): T => {
+    const { source: _source, ...rest } = x
+    return rest as T
+  }
+  return JSON.stringify({ ...pack, format: LIBRARY_FORMAT, version: LIBRARY_VERSION, components: pack.components.map(strip), racks: (pack.racks ?? []).map(strip) }, null, 2)
+}
+
+export function serializeLibrary(name: string, components: ComponentDef[], racks: RackDef[] = []): string {
+  return serializePack({ format: LIBRARY_FORMAT, version: LIBRARY_VERSION, name, components, racks })
+}
+
+/** Parse a pack leniently (local imports); throws when nothing usable is in it. */
+export function parseLibrary(text: string): LibraryPack {
+  let data: unknown
+  try {
+    data = JSON.parse(text)
+  } catch {
+    throw new Error('The file is not valid JSON')
+  }
+  const r = validatePack(data)
+  if (!r.pack) throw new Error(r.errors.slice(0, 3).join('; ') || 'Invalid library pack')
+  return r.pack
+}
+
 export const REGISTRY_FORMAT = 'rack-designer-registry'
+
+/** Checksums ignore line endings, which git may change between Windows checkouts and the hosted file. */
+export const checksumText = (text: string) => text.replace(/\r\n/g, '\n')
 export const MAX_PACK_BYTES = 5 * 1024 * 1024
 export const PACK_ID_RE = /^[a-z0-9][a-z0-9-]{1,40}(\.[a-z0-9][a-z0-9-]{0,40}){1,3}$/
 const ITEM_ID_RE = /^[a-z0-9][a-z0-9._/-]{0,159}$/i
@@ -262,6 +308,50 @@ export function slugify(s: string, max = 40): string {
     .replace(/-+$/, '')
 }
 
+// ---- Building packs ----
+
+export interface PackDraft {
+  id: string
+  name: string
+  packVersion: string
+  author: string
+  description: string
+  license: string
+  homepage: string
+  tags: string
+}
+
+/** Assemble a publishable pack. Item ids lose any namespace so they nest under the new pack id. */
+export function buildPack(draft: PackDraft, components: ComponentDef[], racks: RackDef[]) {
+  const usedC = new Set<string>()
+  const usedR = new Set<string>()
+  const unique = (id: string, used: Set<string>) => {
+    let out = localId(id)
+    for (let n = 2; used.has(out); n++) out = `${localId(id)}-${n}`
+    used.add(out)
+    return out
+  }
+  const raw: LibraryPack = {
+    format: LIBRARY_FORMAT,
+    version: LIBRARY_VERSION,
+    id: draft.id.trim(),
+    name: draft.name.trim(),
+    packVersion: draft.packVersion.trim(),
+    author: draft.author.trim(),
+    description: draft.description.trim(),
+    license: draft.license,
+    homepage: draft.homepage.trim() || undefined,
+    tags: draft.tags
+      .split(',')
+      .map((t) => t.trim().toLowerCase())
+      .filter(Boolean),
+    components: components.map(({ source: _s, ...c }) => ({ ...c, id: unique(c.id, usedC) })),
+    racks: racks.map(({ source: _s, ...r }) => ({ ...r, id: unique(r.id, usedR) }))
+  }
+  // Round-trip through JSON so validation sees exactly what will be published.
+  return validatePack(JSON.parse(serializePack(raw)), { strict: true })
+}
+
 // ---- Registry index ----
 
 export interface RegistryEntry {
@@ -288,6 +378,49 @@ export interface RegistryIndex {
   name: string
   updated: string
   packs: RegistryEntry[]
+  /** Present when the registry accepts uploads directly (the self-hosted registry server). */
+  submit?: {
+    /** Submission endpoint, relative to the index URL. */
+    url: string
+    /** True when submissions wait for an administrator to approve them. */
+    moderated: boolean
+  }
+}
+
+/** Response of the registry server's submission endpoint. */
+export interface SubmissionResult {
+  status: 'published' | 'pending'
+  packId: string
+  packVersion: string
+  submissionId?: string
+  /** Secret needed to publish future updates of this pack. Only returned when a new pack id is first claimed. */
+  editKey?: string
+  message?: string
+}
+
+/**
+ * Registries and packs may be fetched over https from anywhere, or over plain http from
+ * the local machine or a private network (e.g. a homelab registry server).
+ */
+export function isAllowedRegistryUrl(raw: string): boolean {
+  let url: URL
+  try {
+    url = new URL(raw)
+  } catch {
+    return false
+  }
+  if (url.protocol === 'https:') return true
+  return url.protocol === 'http:' && isPrivateHost(url.hostname)
+}
+
+export function isPrivateHost(hostname: string): boolean {
+  const h = hostname.toLowerCase().replace(/^\[|\]$/g, '')
+  if (h === 'localhost' || h === '::1' || /^(fc|fd)[0-9a-f]{2}:/.test(h) || h.startsWith('fe80:')) return true
+  if (/\.(local|lan|home|internal|home\.arpa)$/.test(h) || /^[a-z0-9-]+$/.test(h)) return true
+  const m = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.exec(h)
+  if (!m) return false
+  const [a, b] = [Number(m[1]), Number(m[2])]
+  return a === 10 || a === 127 || (a === 192 && b === 168) || (a === 172 && b >= 16 && b <= 31) || (a === 100 && b >= 64 && b <= 127)
 }
 
 export function registryEntry(pack: LibraryPack, path: string, sha256: string, size: number): RegistryEntry {
@@ -342,7 +475,9 @@ export function parseRegistry(text: string): RegistryIndex {
       size: int(p.size, 0, MAX_PACK_BYTES) ?? 0
     })
   }
-  return { format: REGISTRY_FORMAT, version: 1, name: str(data.name, 80) ?? 'Pack registry', updated: str(data.updated, 40) ?? '', packs }
+  const submitUrl = isObj(data.submit) ? str(data.submit.url, 400) : undefined
+  const submit = submitUrl && !/^[a-z]+:/i.test(submitUrl) ? { url: submitUrl, moderated: data.submit.moderated !== false } : undefined
+  return clean({ format: REGISTRY_FORMAT, version: 1, name: str(data.name, 80) ?? 'Pack registry', updated: str(data.updated, 40) ?? '', packs, submit })
 }
 
 /** For a registry hosted in a GitHub repo, the page where contributors upload new packs (GitHub forks and opens a PR). */

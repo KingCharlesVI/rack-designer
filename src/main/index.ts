@@ -1,6 +1,7 @@
-import { app, BrowserWindow, dialog, ipcMain, Menu, shell, type FileFilter, type MenuItemConstructorOptions } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, Menu, net, shell, type FileFilter, type MenuItemConstructorOptions } from 'electron'
 import { promises as fs } from 'node:fs'
 import { basename, extname, join, resolve } from 'node:path'
+import { isAllowedRegistryUrl } from '../renderer/src/model/packs'
 
 let win: BrowserWindow | null = null
 let dirty = false
@@ -10,6 +11,70 @@ const approvedPaths = new Set<string>()
 let pendingOpen: string | null = findProjectArg(process.argv)
 
 const libraryDir = () => join(app.getPath('userData'), 'library')
+const settingsFile = () => join(app.getPath('userData'), 'settings.json')
+const MAX_FETCH_BYTES = 10 * 1024 * 1024
+
+/** Community packs are fetched over https, or plain http on a private network (e.g. a homelab registry). */
+function allowedUrl(raw: string): URL {
+  const url = new URL(raw)
+  if (!isAllowedRegistryUrl(url.toString())) throw new Error('Only https:// links, or http:// links on your local network, are allowed')
+  return url
+}
+
+/** POST JSON to a registry's submission endpoint and return the status and parsed reply. */
+async function postJson(raw: string, body: string, key?: string): Promise<{ status: number; data: unknown }> {
+  const url = allowedUrl(raw)
+  if (Buffer.byteLength(body) > MAX_FETCH_BYTES) throw new Error('The pack is too large')
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 30000)
+  try {
+    const headers: Record<string, string> = { 'content-type': 'application/json' }
+    if (key) headers['x-pack-key'] = key
+    const res = await net.fetch(url.toString(), { method: 'POST', body, headers, signal: controller.signal })
+    const text = (await res.text()).slice(0, 200_000)
+    let data: unknown
+    try {
+      data = JSON.parse(text)
+    } catch {
+      data = { error: text.slice(0, 300) || res.statusText }
+    }
+    return { status: res.status, data }
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') throw new Error(`Timed out contacting ${url.hostname}`)
+    throw e
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+async function fetchText(raw: string): Promise<string> {
+  const url = allowedUrl(raw)
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 20000)
+  try {
+    const res = await net.fetch(url.toString(), { signal: controller.signal, cache: 'no-cache' })
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText || 'error'} fetching ${url.hostname}`)
+    const declared = Number(res.headers.get('content-length') ?? 0)
+    if (declared > MAX_FETCH_BYTES) throw new Error('The file is too large')
+    const buf = Buffer.from(await res.arrayBuffer())
+    if (buf.length > MAX_FETCH_BYTES) throw new Error('The file is too large')
+    return buf.toString('utf-8')
+  } catch (e) {
+    if ((e as Error).name === 'AbortError') throw new Error(`Timed out contacting ${url.hostname}`)
+    throw e
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+async function readSettings(): Promise<Record<string, unknown>> {
+  try {
+    const data = JSON.parse(await fs.readFile(settingsFile(), 'utf-8'))
+    return typeof data === 'object' && data && !Array.isArray(data) ? data : {}
+  } catch {
+    return {}
+  }
+}
 
 function findProjectArg(argv: string[]): string | null {
   const arg = argv.slice(1).find((a) => !a.startsWith('-') && ['.rack', '.json'].includes(extname(a).toLowerCase()))
@@ -51,6 +116,7 @@ function buildMenu() {
           ]
         },
         { type: 'separator' },
+        { label: 'Community packs…', accelerator: 'CmdOrCtrl+Shift+P', click: command('community') },
         { label: 'Open library folder', click: () => shell.openPath(libraryDir()) },
         { type: 'separator' },
         { role: 'quit' }
@@ -67,7 +133,8 @@ function buildMenu() {
         { role: 'paste' },
         { type: 'separator' },
         { label: 'Duplicate', accelerator: 'CmdOrCtrl+D', click: command('duplicate') },
-        { label: 'New custom component…', click: command('customComponent') }
+        { label: 'New custom component…', click: command('customComponent') },
+        { label: 'New custom rack…', click: command('customRack') }
       ]
     },
     {
@@ -217,6 +284,22 @@ function registerIpc() {
 
   ipcMain.handle('library:delete', async (_e, name: string) => {
     await fs.rm(join(libraryDir(), basename(name)), { force: true })
+  })
+
+  ipcMain.handle('net:fetchText', (_e, url: string) => fetchText(url))
+  ipcMain.handle('net:postJson', (_e, url: string, body: string, key?: string) => postJson(url, body, key))
+
+  ipcMain.handle('shell:openExternal', async (_e, url: string) => {
+    if (new URL(url).protocol !== 'https:') throw new Error('Only https:// links can be opened')
+    await shell.openExternal(url)
+  })
+
+  ipcMain.handle('settings:get', () => readSettings())
+  ipcMain.handle('settings:set', async (_e, patch: Record<string, unknown>) => {
+    const next = { ...(await readSettings()), ...patch }
+    await fs.mkdir(app.getPath('userData'), { recursive: true })
+    await fs.writeFile(settingsFile(), JSON.stringify(next, null, 2), 'utf-8')
+    return next
   })
 
   ipcMain.on('app:dirty', (_e, value: boolean) => (dirty = value))

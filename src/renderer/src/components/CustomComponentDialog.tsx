@@ -26,7 +26,7 @@ const dataTypes = Object.values(PORT_TYPES).filter((t) => t.kind === 'data')
 const powerTypes = Object.values(PORT_TYPES).filter((t) => t.kind === 'power')
 
 export function CustomComponentDialog() {
-  const dialog = useStore((s) => s.dialog)
+  const dialog = useStore((s) => (s.dialog?.kind === 'custom-component' ? s.dialog : null))
   const catalog = useStore((s) => s.catalog)
   const close = () => useStore.getState().openDialog(null)
   const initial = useMemo(() => {

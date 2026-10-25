@@ -912,3 +912,150 @@ button.inline {
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Library sources & community packs */
+.src-badge {
+  display: inline-block;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  margin-right: 5px;
+  padding: 0 5px;
+  border-radius: 3px;
+  background: #2d2a45;
+  color: #c4b5fd;
+  font-size: 10px;
+}
+.src-badge.mine {
+  background: #1e3a2f;
+  color: #86efac;
+}
+.modal.community {
+  height: 82vh;
+}
+.modal.community .tabs {
+  padding: 6px 14px 0;
+}
+.modal .rack-editor {
+  display: flex;
+  gap: 14px;
+}
+.rack-editor-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.registry-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.registry-bar input {
+  flex: 1;
+}
+.pack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0;
+}
+.pack-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #1f2328;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  user-select: text;
+}
+.pack-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pack-head b {
+  font-size: 13px;
+}
+.tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.tag {
+  background: #2a2f36;
+  border-radius: 10px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.notice {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  user-select: text;
+}
+ul.notice {
+  padding-left: 28px;
+}
+.notice.bad {
+  border-color: #7f1d1d;
+  background: #2d1b1b;
+}
+.notice.warn {
+  border-color: #854d0e;
+  background: #2a2414;
+}
+.notice.ok {
+  border-color: #166534;
+  background: #172a1f;
+}
+.span2 {
+  grid-column: span 2;
+}
+.span4 {
+  grid-column: span 4;
+}
+input.invalid {
+  border-color: var(--bad);
+}
+.pick-list {
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px 8px;
+}
+.pick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+.button-row.end {
+  justify-content: flex-end;
+  padding: 10px 0 0;
+}
+code {
+  font-family: Consolas, 'Cascadia Mono', monospace;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+code.key {
+  background: #111317;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 6px;
+  user-select: all;
+}
+.share-target {
+  margin-right: auto;
+  align-self: center;
+}

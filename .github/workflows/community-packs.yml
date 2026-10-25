@@ -1,0 +1,51 @@
+name: Community packs
+
+on:
+  pull_request:
+    paths:
+      - 'community/**'
+      - 'src/renderer/src/model/packs.ts'
+      - 'scripts/registry.ts'
+  push:
+    branches: [main]
+    paths:
+      - 'community/packs/**'
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # --ignore-scripts skips the Electron download; validation only needs the TypeScript sources.
+      - run: npm ci --ignore-scripts
+      - run: npm run registry:check
+
+  publish-index:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run registry:build
+      - name: Commit updated index
+        run: |
+          if git diff --quiet community/index.json; then
+            echo "Index unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add community/index.json
+          git commit -m "Update community pack index"
+          git push

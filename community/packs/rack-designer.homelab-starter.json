@@ -1,0 +1,76 @@
+{
+  "format": "rack-designer-library",
+  "version": 2,
+  "id": "rack-designer.homelab-starter",
+  "name": "Homelab starter",
+  "packVersion": "1.0.0",
+  "author": "Rack Designer",
+  "description": "Example community pack: mini-PC and Raspberry Pi rack mounts, plus the famous IKEA LACK 'LackRack'. Power figures are typical estimates; mini PCs use external bricks, modelled as C14 inputs.",
+  "license": "CC0-1.0",
+  "tags": ["homelab", "mini-pc", "raspberry-pi", "example"],
+  "components": [
+    {
+      "id": "pi-rack-1u-4x",
+      "manufacturer": "UCTRONICS",
+      "model": "Raspberry Pi 1U rack mount (4x Pi)",
+      "category": "server",
+      "uHeight": 1,
+      "fullDepth": false,
+      "depthMm": 120,
+      "weightKg": 1.2,
+      "power": { "typicalW": 20, "maxW": 48 },
+      "ports": [
+        { "id": "eth", "type": "rj45", "count": 4, "face": "front", "label": "Pi", "speed": "1G" }
+      ],
+      "color": "#2f3136",
+      "description": "Four Raspberry Pi boards on a 1U tray. Each Pi is powered by its own USB-C or PoE supply, which is not modelled."
+    },
+    {
+      "id": "thinkcentre-tiny-1u-2x",
+      "manufacturer": "Lenovo",
+      "model": "ThinkCentre Tiny 1U rack kit (2 PCs)",
+      "category": "server",
+      "uHeight": 1,
+      "fullDepth": false,
+      "depthMm": 300,
+      "weightKg": 3.5,
+      "power": { "typicalW": 30, "maxW": 130 },
+      "ports": [
+        { "id": "usb", "type": "usb-a", "count": 4, "face": "front", "label": "USB" },
+        { "id": "lan", "type": "rj45", "count": 2, "face": "rear", "label": "LAN", "speed": "1G" },
+        { "id": "psu", "type": "c14", "count": 2, "face": "rear", "label": "Brick" }
+      ],
+      "color": "#1c1d20",
+      "description": "Two ThinkCentre M-series Tiny PCs side by side on a 1U shelf."
+    },
+    {
+      "id": "minisforum-ms01-1u",
+      "manufacturer": "Minisforum",
+      "model": "MS-01 1U rack mount",
+      "category": "server",
+      "uHeight": 1,
+      "fullDepth": false,
+      "depthMm": 250,
+      "weightKg": 2.5,
+      "power": { "typicalW": 35, "maxW": 180 },
+      "ports": [
+        { "id": "sfp", "type": "sfp+", "count": 2, "face": "rear", "label": "SFP", "speed": "10G" },
+        { "id": "lan", "type": "rj45", "count": 2, "face": "rear", "label": "LAN", "speed": "2.5G" },
+        { "id": "psu", "type": "c14", "count": 1, "face": "rear", "label": "Brick" }
+      ],
+      "color": "#26282c"
+    }
+  ],
+  "racks": [
+    {
+      "id": "lackrack",
+      "manufacturer": "IKEA",
+      "model": "LACK side table (LackRack)",
+      "uHeight": 8,
+      "widthMm": 550,
+      "depthMm": 550,
+      "maxLoadKg": 25,
+      "style": "4-post-open"
+    }
+  ]
+}

@@ -7,8 +7,9 @@ A Windows desktop app for designing server racks: lay out equipment in front and
 ## Features
 
 - **Large component library**: 1,200+ components from 70+ manufacturers (Dell, HPE, Lenovo, Cisco, Juniper, Arista, Aruba, Ubiquiti, MikroTik, Fortinet, Palo Alto, NetApp, Pure, Synology, APC, Eaton, Vertiv, Raritan and more), plus generic servers, switches, PDUs, UPSs, patch panels, blanks, shelves and facility power feeds. There are also 90 rack models (enclosed, open-frame, 2-post and wall-mount).
-- **Custom components**: create your own devices with any mix of ports, or copy a library item and adjust it. They are saved to your personal library.
-- **Library packs**: import and export component libraries as JSON (`File → Import → Library pack…`).
+- **Custom components and racks**: create your own devices with any mix of ports, and your own rack models, or copy a library item and adjust it. They are saved to your personal library.
+- **Community packs**: browse, install and update packs of components and racks shared by other users (**File → Community packs…**). You can also build your own pack from your custom items and share it in a few clicks. Packs can be installed from the registry, a file, or a link. See [community/README.md](community/README.md).
+- **Self-hosted registry server**: a lightweight server (port 5010) for a homelab or team. People publish packs to it directly from the app, and an admin console handles approvals. See [server/README.md](server/README.md).
 - **Front and rear elevations**: full-depth vs half-depth devices, rear-mounted equipment, zero-U vertical PDUs on the side rails, and power feeds above each rack.
 - **Data connections**: click a port, then another port (switch between Front and Rear mid-connection if needed). Compatibility is checked (RJ45, SFP/SFP+/SFP28, QSFP, OSFP, LC/SC/MPO fibre, console, SAS…), with notes for breakouts and copper SFPs. Cable type and length are suggested from the positions.
 - **Power modelling**: facility feed → UPS → PDU → device. The model covers load splitting across redundant PSUs, per-outlet current against connector ratings, PDU/UPS/feed capacity with a configurable continuous-load limit (80% by default), 3-phase circuits, and UPS battery ride-through.
@@ -36,6 +37,9 @@ Try **Help → Open example design**, or open [examples/compute-pod.rack](exampl
 | `npm run typecheck` | Type-check everything |
 | `npm run pack` | Build an unpacked Windows app in `dist/win-unpacked` |
 | `npm run dist` | Build the Windows installer (NSIS) and a portable `.exe` in `dist/` |
+| `npm run registry:check` | Validate the community packs in `community/packs` |
+| `npm run server:build` | Bundle the registry server to `server/dist/registry-server.mjs` |
+| `npm run registry:build` | Validate and regenerate `community/index.json` (CI does this on merge) |
 
 > If you launch Electron from a VS Code terminal and it behaves like plain Node, unset `ELECTRON_RUN_AS_NODE`.
 
@@ -86,6 +90,8 @@ Model power by placing a **power feed** (Library → Power feeds) above the rack
 }
 ```
 
+Packs shared through the community registry also carry `id`, `packVersion`, `author`, `description` and `license`. See [community/README.md](community/README.md).
+
 Port type ids (`rj45`, `sfp+`, `qsfp28`, `lc`, `c13`, `c14`, `nema-l6-30p`, …) are listed in [src/renderer/src/model/ports.ts](src/renderer/src/model/ports.ts). Imported packs and custom components are stored in `%APPDATA%\rack-designer\library` (**File → Open library folder**).
 
 ## Library accuracy
@@ -97,6 +103,9 @@ Port layouts describe each product's base configuration. Power figures are nomin
 ```
 src/main/                 Electron main process (window, menu, file dialogs, user library storage)
 src/preload/              Secure bridge exposed to the renderer as window.api
+community/                Community pack registry (packs/*.json + generated index.json)
+scripts/registry.ts       Validates community packs and builds the registry index
+server/                   Self-hosted registry server (Node, no dependencies) + Docker/systemd deployment
 src/renderer/src/
   model/                  Data model, placement rules, power analysis, validation, file formats, reports
   library/                Built-in component and rack library

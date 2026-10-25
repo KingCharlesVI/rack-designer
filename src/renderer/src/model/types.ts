@@ -90,6 +90,8 @@ export interface RackDef {
   maxLoadKg?: number
   style: '4-post-enclosed' | '4-post-open' | '2-post' | 'wall-mount'
   generic?: boolean
+  /** Set for racks that came from a user library pack. */
+  source?: string
 }
 
 export interface Rack {

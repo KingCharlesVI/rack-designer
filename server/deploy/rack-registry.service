@@ -1,0 +1,43 @@
+[Unit]
+Description=Rack Designer pack registry
+Documentation=https://github.com/KingCharlesVI/rack-designer/tree/main/server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rack-registry
+Group=rack-registry
+WorkingDirectory=/opt/rack-registry
+# Defaults; values in the EnvironmentFile take precedence.
+Environment=PORT=5010 HOST=0.0.0.0 DATA_DIR=/var/lib/rack-registry NODE_ENV=production
+EnvironmentFile=/etc/rack-registry/registry.env
+ExecStart=/usr/bin/node /opt/rack-registry/registry-server.mjs
+Restart=on-failure
+RestartSec=3
+
+# Creates /var/lib/rack-registry owned by the service user.
+StateDirectory=rack-registry
+StateDirectoryMode=0750
+
+# Hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

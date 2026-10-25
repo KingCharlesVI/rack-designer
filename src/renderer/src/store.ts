@@ -18,11 +18,25 @@ export interface UserPack {
   pack: LibraryPack
 }
 
-export interface DialogState {
-  kind: 'custom-component'
-  /** Component to edit, or a template to start from. */
-  componentId?: string
-  duplicate?: boolean
+export type DialogState =
+  | {
+      kind: 'custom-component'
+      /** Component to edit, or a template to start from. */
+      componentId?: string
+      duplicate?: boolean
+    }
+  | { kind: 'custom-rack'; rackId?: string; duplicate?: boolean }
+  | { kind: 'community'; tab?: 'browse' | 'installed' | 'create' }
+
+/** Default community registry: the community/ folder of the Rack Designer GitHub repo. */
+export const DEFAULT_REGISTRY_URL = 'https://raw.githubusercontent.com/KingCharlesVI/rack-designer/main/community/index.json'
+
+export interface Settings {
+  registryUrl: string
+  /** Remembered author name for the pack builder. */
+  author?: string
+  /** Edit keys for packs this user published to self-hosted registries, keyed by "<registry origin> <pack id>". */
+  packKeys?: Record<string, string>
 }
 
 interface State {
@@ -43,6 +57,7 @@ interface State {
   userPacks: UserPack[]
   toasts: Toast[]
   dialog: DialogState | null
+  settings: Settings
 
   /** Apply an edit. The recipe may return an error string, in which case nothing changes. */
   edit: (recipe: (draft: Project) => string | null | void, opts?: { select?: Selection | null }) => string | null
@@ -59,6 +74,7 @@ interface State {
   toast: (text: string, kind?: Toast['kind']) => void
   dismissToast: (id: number) => void
   openDialog: (d: DialogState | null) => void
+  setSettings: (s: Partial<Settings>) => void
 }
 
 export function starterProject(): Project {
@@ -86,6 +102,7 @@ export const useStore = create<State>((set, get) => ({
   userPacks: [],
   toasts: [],
   dialog: null,
+  settings: { registryUrl: DEFAULT_REGISTRY_URL },
 
   edit: (recipe, opts) => {
     const { project, past, version } = get()
@@ -140,7 +157,8 @@ export const useStore = create<State>((set, get) => ({
     setTimeout(() => get().dismissToast(id), kind === 'error' ? 7000 : 3500)
   },
   dismissToast: (id) => set({ toasts: get().toasts.filter((t) => t.id !== id) }),
-  openDialog: (dialog) => set({ dialog })
+  openDialog: (dialog) => set({ dialog }),
+  setSettings: (patch) => set({ settings: { ...get().settings, ...patch } })
 }))
 
 function validSelection(p: Project, s: Selection | null): Selection | null {

@@ -13,7 +13,11 @@
     "test": "vitest run",
     "pack": "electron-vite build && electron-builder --win --dir",
     "dist": "electron-vite build && electron-builder --win",
-    "postinstall": "node node_modules/electron/install.js"
+    "postinstall": "node node_modules/electron/install.js",
+    "registry:check": "tsx scripts/registry.ts",
+    "registry:build": "tsx scripts/registry.ts --write",
+    "server:dev": "tsx server/src/main.ts",
+    "server:build": "esbuild server/src/main.ts --bundle --platform=node --format=esm --target=node18 --outfile=server/dist/registry-server.mjs --legal-comments=none"
   },
   "dependencies": {
     "immer": "^11.2.9",
@@ -29,6 +33,8 @@
     "electron": "^45.0.0",
     "electron-builder": "^26.18.0",
     "electron-vite": "^6.0.0",
+    "esbuild": "^0.28.2",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
     "vitest": "^5.0.5"

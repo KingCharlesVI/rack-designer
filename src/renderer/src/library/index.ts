@@ -67,12 +67,20 @@ export const builtinComponents: ComponentDef[] = dedupe([
 
 export const builtinRacks: RackDef[] = dedupe(rackModels)
 
+export interface CatalogSource {
+  file: string
+  name: string
+  pack: LibraryPack
+}
+
 export interface Catalog {
   components: ComponentDef[]
   racks: RackDef[]
   byId: Map<string, ComponentDef>
   rackById: Map<string, RackDef>
   manufacturers: string[]
+  /** User library packs (custom components, imported and community packs) by file name. */
+  sources: Map<string, CatalogSource>
 }
 
 /** Merge the built-in library with user packs. User entries override built-ins with the same id. */
@@ -81,13 +89,15 @@ export function buildCatalog(packs: { pack: LibraryPack; source: string }[] = []
   for (const c of builtinComponents) byId.set(c.id, c)
   const rackById = new Map<string, RackDef>()
   for (const r of builtinRacks) rackById.set(r.id, r)
+  const sources = new Map<string, CatalogSource>()
   for (const { pack, source } of packs) {
+    sources.set(source, { file: source, name: pack.name, pack })
     for (const c of pack.components) byId.set(c.id, { ...c, source })
-    for (const r of pack.racks ?? []) rackById.set(r.id, r)
+    for (const r of pack.racks ?? []) rackById.set(r.id, { ...r, source })
   }
   const components = [...byId.values()]
   const manufacturers = [...new Set(components.map((c) => c.manufacturer))].sort((a, b) => a.localeCompare(b))
-  return { components, racks: [...rackById.values()], byId, rackById, manufacturers }
+  return { components, racks: [...rackById.values()], byId, rackById, manufacturers, sources }
 }
 
 const searchText = new WeakMap<ComponentDef, string>()
@@ -105,6 +115,8 @@ export interface SearchFilter {
   category?: Category | ''
   manufacturer?: string
   uHeight?: number
+  /** "builtin", or a user library file name. */
+  source?: string
 }
 
 export function searchComponents(catalog: Catalog, f: SearchFilter): ComponentDef[] {
@@ -113,6 +125,7 @@ export function searchComponents(catalog: Catalog, f: SearchFilter): ComponentDe
     if (f.category && c.category !== f.category) return false
     if (f.manufacturer && c.manufacturer !== f.manufacturer) return false
     if (f.uHeight !== undefined && c.uHeight !== f.uHeight) return false
+    if (f.source && (f.source === 'builtin' ? !!c.source : c.source !== f.source)) return false
     if (!terms.length) return true
     const t = textOf(c)
     return terms.every((term) => t.includes(term))

@@ -1,10 +1,10 @@
 import { createProject, pruneComponents } from './project'
-import type { ComponentDef, Project, RackDef } from './types'
+import type { ComponentDef, Project } from './types'
+
+export { LIBRARY_FORMAT, LIBRARY_VERSION, parseLibrary, serializeLibrary, serializePack, type LibraryPack } from './packs'
 
 export const PROJECT_FORMAT = 'rack-designer-project'
 export const PROJECT_VERSION = 1
-export const LIBRARY_FORMAT = 'rack-designer-library'
-export const LIBRARY_VERSION = 1
 
 export interface ProjectFile {
   format: typeof PROJECT_FORMAT
@@ -12,15 +12,6 @@ export interface ProjectFile {
   savedAt: string
   app: string
   project: Project
-}
-
-export interface LibraryPack {
-  format: typeof LIBRARY_FORMAT
-  version: number
-  name: string
-  description?: string
-  components: ComponentDef[]
-  racks?: RackDef[]
 }
 
 export class FileFormatError extends Error {}
@@ -74,38 +65,6 @@ export function parseProject(text: string, lookup?: (id: string) => ComponentDef
     }
   }
   return { project, warnings }
-}
-
-export function serializeLibrary(name: string, components: ComponentDef[], racks: RackDef[] = []): string {
-  const pack: LibraryPack = { format: LIBRARY_FORMAT, version: LIBRARY_VERSION, name, components, racks }
-  return JSON.stringify(pack, null, 2)
-}
-
-export function parseLibrary(text: string): LibraryPack {
-  let data: unknown
-  try {
-    data = JSON.parse(text)
-  } catch {
-    throw new FileFormatError('The file is not valid JSON')
-  }
-  if (!isObject(data) || data.format !== LIBRARY_FORMAT) throw new FileFormatError('This is not a Rack Designer library pack')
-  const warnings: string[] = []
-  const components = arrayOf<ComponentDef>(
-    data.components,
-    (c) => typeof c.id === 'string' && typeof c.model === 'string' && typeof c.uHeight === 'number' && Array.isArray(c.ports),
-    'component',
-    warnings
-  )
-  const racks = arrayOf<RackDef>(data.racks ?? [], (r) => typeof r.id === 'string' && typeof r.uHeight === 'number', 'rack', warnings)
-  if (warnings.length && !components.length && !racks.length) throw new FileFormatError(warnings.join('\n'))
-  return {
-    format: LIBRARY_FORMAT,
-    version: typeof data.version === 'number' ? data.version : 1,
-    name: typeof data.name === 'string' ? data.name : 'Imported library',
-    description: typeof data.description === 'string' ? data.description : undefined,
-    components,
-    racks
-  }
 }
 
 function isObject(x: unknown): x is Record<string, any> {

@@ -3,3 +3,7 @@ out/
 dist/
 *.log
 .vite/
+/node_modules/*
+server/dist/
+server/data/
+server/.env

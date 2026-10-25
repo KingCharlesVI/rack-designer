@@ -1,11 +1,14 @@
 import { useEffect } from 'react'
 import { BottomPanel } from './components/BottomPanel'
 import { Canvas, canvasControls } from './components/Canvas'
+import { CommunityDialog } from './components/CommunityDialog'
 import { CustomComponentDialog } from './components/CustomComponentDialog'
+import { CustomRackDialog } from './components/CustomRackDialog'
 import { LibraryPanel } from './components/LibraryPanel'
 import { PropertiesPanel } from './components/PropertiesPanel'
 import { Toolbar } from './components/Toolbar'
 import * as cmd from './lib/commands'
+import { loadSettings } from './lib/packCommands'
 import { onFileOpened, onMenu, setDirty, setTitle } from './lib/desktop'
 import { disconnect, findDevice, moveDevice, removeDevices } from './model/project'
 import { isDirty, useStore } from './store'
@@ -31,6 +34,8 @@ const MENU: Record<string, () => void> = {
   redo: () => (isTyping() ? document.execCommand('redo') : S().redo()),
   duplicate: cmd.duplicateSelection,
   customComponent: () => S().openDialog({ kind: 'custom-component' }),
+  customRack: () => S().openDialog({ kind: 'custom-rack' }),
+  community: () => S().openDialog({ kind: 'community' }),
   viewFront: () => S().setFace('front'),
   viewRear: () => S().setFace('rear'),
   toggleCables: () => S().toggleCables(),
@@ -75,6 +80,7 @@ export function App() {
 
   useEffect(() => {
     void cmd.reloadLibrary()
+    void loadSettings()
     const offMenu = onMenu((c) => MENU[c]?.())
     const offOpen = onFileOpened((f) => {
       if (!isDirty(S()) || window.confirm('Discard unsaved changes to the current design?')) cmd.loadProjectText(f.path, f.content)
@@ -158,6 +164,8 @@ export function App() {
         <PropertiesPanel />
       </div>
       {dialog?.kind === 'custom-component' && <CustomComponentDialog key={`${dialog.componentId}-${dialog.duplicate}`} />}
+      {dialog?.kind === 'custom-rack' && <CustomRackDialog key={`${dialog.rackId}-${dialog.duplicate}`} />}
+      {dialog?.kind === 'community' && <CommunityDialog />}
       <Toasts />
     </div>
   )
